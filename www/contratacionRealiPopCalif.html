@@ -1,0 +1,9 @@
+<ons-popover direction="up down" cancelable>
+    <ons-list ng-controller="usuarioCtrl" style="text-align: center">
+        <ons-list-item>
+            <ons-icon ng-repeat="n in [] | range:redondearNumero(getContratacionSeleccionada().promedioProveedor)" icon="fa-star" style="color: orange" fixed-width="false"></ons-icon>
+            <br>
+            {{(redondearNumero(getContratacionSeleccionada().promedioProveedor) === 0)?'':(redondearNumero(getContratacionSeleccionada().promedioProveedor) === 1)?'MALO':(redondearNumero(getContratacionSeleccionada().promedioProveedor) === 2)?'REGULAR':(redondearNumero(getContratacionSeleccionada().promedioProveedor) === 3)?'BUENO':(redondearNumero(getContratacionSeleccionada().promedioProveedor) === 4)?'MUY BUENO':'EXCELENTE'}}
+        </ons-list-item>
+    </ons-list>
+</ons-popover>

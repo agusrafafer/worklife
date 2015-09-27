@@ -1,0 +1,48 @@
+
+<ons-page on-device-backbutton="app.navigator.popPage()" >
+
+    <ons-modal var="modal">
+        <ons-icon icon="ion-load-c" spin="true"></ons-icon>
+        <br><br>
+        Aguarde...
+    </ons-modal>
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+        </div>
+        <div class="center">Login WorkLife</div>
+    </ons-toolbar>
+
+
+
+    <div class="login-form content-padded" ng-controller="usuarioCtrl">
+        <form name="frmLogin" novalidate>
+            <input type="email" class="text-input--underbar"
+                   name="mail"  placeholder="Email" 
+                   ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
+                   ng-model="usuario.email" required>
+            <div ng-show="frmLogin.mail.$error.pattern" style="font-size: small">
+                <i style="color: #ff3333" class="ion-information-circled text-danger"></i> 
+                Email incompleto!
+            </div>
+
+            <input type="password" class="text-input--underbar" 
+                   name="password" placeholder="Password" 
+                   ng-model="usuario.password" required>
+            <br><br>
+            <ons-button modifier="large" class="login-button" 
+                        ng-click="login(usuario.email, usuario.password)"
+                        ng-disabled="!frmLogin.$valid"
+                        >
+                Ingresar
+            </ons-button>
+            <br><br>
+            <ons-button modifier="quiet" class="forgot-password">Olvidaste tu clave?</ons-button>
+        </form>
+    </div>
+
+</ons-page>
+
+
+

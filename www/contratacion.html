@@ -1,0 +1,60 @@
+<ons-navigator var="app.navigator">
+    <ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">
+
+                Contactos {{getTipoContratacion()}}
+
+            </div>
+            <div class="right">
+
+            </div>
+        </ons-toolbar>
+        
+        <ons-modal var="modal">
+            <ons-icon icon="ion-load-c" spin="true"></ons-icon>
+            <br><br>
+            Aguarde...
+        </ons-modal>
+
+        <ons-list>
+
+            <ons-list-item modifier="chevron" class="list-item-container"
+                           ng-repeat="contratacion in getContratacion()"
+                           ng-click="mostrarDetalleContratacion($index)"
+                           >
+                <ons-row>
+                    <ons-col width="95px">
+                        <img src="https://placeholdit.imgix.net/~text?txtsize=12&amp;txt=%27Sin+imagenes%27&amp;w=90&amp;h=90" 
+                             alt="Sin imagenes" title="Sin imagenes"
+                             class="thumbnail"
+                             ng-show="contratacion.idPublicacion.imagenCollection.length === 0"
+                             >
+                        <img src="http://www.worklife.com.ar/wl/web/javax.faces.resource/publi/t{{contratacion.idPublicacion.imagenCollection[0].url}}?ln=img" 
+                             alt="" class="thumbnail"
+                             ng-show="contratacion.idPublicacion.imagenCollection.length !== 0">
+                    </ons-col>
+                    <ons-col>
+                        <div class="name">
+                            {{contratacion.idPublicacion.titulo}}
+                        </div>
+                        <div class="location">
+                            <i class="fa fa-calendar"></i>
+                            {{contratacion.fecha| date:'dd/MM/yyyy'}}
+                        </div>
+                        <div class="desc">
+                            <span class="labelito labelito-{{((contratacion.fechaCancelacion === null && contratacion.fechaConfirmacion === null)) ? 'info' : (contratacion.fechaCancelacion !== null) ? 'danger' : (contratacion.fechaConfirmacion !== null) ? 'success' : 'warning'}}"> {{((contratacion.fechaCancelacion === null && contratacion.fechaConfirmacion === null)) ? 'Pendiente' : (contratacion.fechaCancelacion !== null) ? 'Cancelada' : (contratacion.fechaConfirmacion !== null) ? 'Confirmada' : ''}}</span>
+                        </div>
+                    </ons-col>
+                    <ons-col width="40px"></ons-col>
+                </ons-row>
+            </ons-list-item>
+        </ons-list>
+
+
+    </ons-page>
+</ons-navigator>

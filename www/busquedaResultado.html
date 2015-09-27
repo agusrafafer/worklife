@@ -1,0 +1,97 @@
+<ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="publicacionCtrl">
+
+    <!--<ons-pull-hook ng-action="traerMasPublicaciones($done)" var="loader">
+        <span ng-switch="loader.getCurrentState()">
+            <span ng-switch-when="initial"><ons-icon size="35px" icon="ion-arrow-down-a"></ons-icon> Pull down to refresh</span>
+            <span ng-switch-when="preaction"><ons-icon size="35px" icon="ion-arrow-up-a"></ons-icon> Release to refresh</span>
+            <span ng-switch-when="action"><ons-icon size="35px" spin="true" icon="ion-load-d"></ons-icon> Loading data...</span>
+        </span>
+    </ons-pull-hook>-->
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+        </div>
+        <div class="center">
+
+            <input type="search" 
+                   class="search-input" 
+                   style="margin-top: 5px;margin-bottom: 5px;" 
+                   placeholder="Buscar Servicio, Profesion, Educacion"
+                   ng-model="textoBuscado"
+                   ng-show="getVerBuscar()"
+                   ng-keydown="($event.which === 13)?buscar():return;">
+
+        </div>
+        <div class="right">
+            <ons-toolbar-button ng-click="mostrarFiltros()">
+                <ons-icon icon="ion-funnel" 
+                          fixed-width="false" 
+                          style="vertical-align: -4px;">
+
+                </ons-icon>
+            </ons-toolbar-button>
+            <ons-toolbar-button ng-click="setVerBuscar()">
+                <ons-icon icon="ion-search" 
+                          fixed-width="false" 
+                          style="vertical-align: -4px;">
+
+                </ons-icon>
+            </ons-toolbar-button>
+            
+        </div>
+    </ons-toolbar>
+
+        <ons-list>
+
+            <ons-list-item modifier="chevron" class="list-item-container"
+                           ng-repeat="publicacion in getPublicaciones() | filter:aplicarFiltro"
+                           ng-click="mostrarDetalle($index)"
+                           >
+                <ons-row>
+                    <ons-col width="95px">
+                        <img src="https://placeholdit.imgix.net/~text?txtsize=12&amp;txt=%27Sin+imagenes%27&amp;w=90&amp;h=90" 
+                             alt="Sin imagenes" title="Sin imagenes"
+                             class="thumbnail"
+                             ng-show="publicacion.imagenCollection.length === 0"
+                             >
+                        <img src="http://www.worklife.com.ar/wl/web/javax.faces.resource/publi/t{{publicacion.imagenCollection[0].url}}?ln=img" 
+                             alt="" class="thumbnail"
+                             ng-show="publicacion.imagenCollection.length !== 0">
+                    </ons-col>
+                    <ons-col>
+                        <div class="name">
+                            {{publicacion.titulo}}
+                        </div>
+                        <div class="location">
+                            <i class="fa fa-map-marker"></i> {{publicacion.idLocalidad.localidad}}, {{publicacion.idLocalidad.idDepartamento.idProvincia.provincia}}
+                        </div>
+                        <div class="desc">
+                            $ {{publicacion.precio}}
+                        </div>
+                    </ons-col>
+                    <ons-col width="40px"></ons-col>
+                </ons-row>
+            </ons-list-item>
+            <ons-list-item modifier="tappable"
+                           ng-show="!trayendoPublicaciones"
+                           ng-click="traerMasPublicaciones()">
+                <ons-row style="text-align: center; margin-top: 5px; margin-bottom: 5px;
+                         opacity: 0.3;">
+                    <ons-col width="100%">
+                        <ons-icon icon="ion-plus-circled" size="40px"></ons-icon>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+            <ons-list-item ng-show="trayendoPublicaciones">
+                <ons-row style="text-align: center; margin-top: 5px; margin-bottom: 5px;
+                         opacity: 0.3;">
+                    <ons-col width="100%">
+                        <ons-icon icon="ion-load-c" size="40px" spin="true"></ons-icon>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+        </ons-list>
+
+
+</ons-page>

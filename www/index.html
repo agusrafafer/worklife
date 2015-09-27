@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <!--<script src="components/loader.js"></script>
+        <link rel="stylesheet" href="components/loader.css">-->
+        <link rel="stylesheet" href="css/onsenui.css"/>
+        <link rel="stylesheet" href="css/onsen-css-components.css"/>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet" href="css/registro.css">
+        <link rel="stylesheet" href="css/busquedaResultado.css">
+        <link rel="stylesheet" href="css/publicacionDetalle.css">
+        <link rel="stylesheet" href="css/busquedaFiltrar.css">
+        <link rel="stylesheet" href="css/reputacion.css">
+    </head>
+    <body ng-controller="usuarioCtrl">
+
+    <ons-sliding-menu var="app.slidingMenu"  
+                      menu-page="menu.html" 
+                      main-page="inicio.html" 
+                      side="left" 
+                      type="reveal"
+                      max-slide-distance="200px"
+                      ons-preclose="cerroMenuIzq()"
+                      ons-preopen="abrioMenuIzq()"
+                      swipeable
+                      >
+    </ons-sliding-menu>
+    <script type="text/javascript" src="cordova.js"></script> 
+    <script type="text/javascript" src="js/angular/angular.js"></script>
+    <script type="text/javascript" src="js/onsenui.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/angular/openfb.js"></script>
+    <script type="text/javascript" src="js/angular/ngopenfb.js"></script>
+    <!--<script type="text/javascript" src="js/angular/angular-route.min.js"></script>
+    
+    <script src="https://cdn.rawgit.com/driftyco/ng-cordova/master/dist/ng-cordova.min.js"></script>
+    <script src="https://cdn.rawgit.com/nraboy/ng-cordova-oauth/master/dist/ng-cordova-oauth.min.js"></script>-->
+
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/factories.js"></script>
+    <script type="text/javascript" src="js/underscore-min.js"></script>
+
+    <script type="text/javascript" src="js/usuarioService.js"></script>
+    <script type="text/javascript" src="js/publicacionService.js"></script>
+
+    <script type="text/javascript" src="js/usuarioCtrl.js"></script>
+    <script type="text/javascript" src="js/publicacionCtrl.js"></script>
+    <script type="text/javascript" src="js/mapCtrl.js"></script>
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=true|false"></script>
+
+</body>
+</html>

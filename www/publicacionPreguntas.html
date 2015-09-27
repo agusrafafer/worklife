@@ -1,0 +1,52 @@
+<ons-page modifier="shop-details" on-device-backbutton="app.navigator.popPage()" ng-controller="publicacionCtrl">
+    <ons-toolbar>
+        <div class="right">
+            <ons-toolbar-button ng-show="isLogueado()">Preguntar</ons-toolbar-button>
+        </div>
+        <div class="center">
+            {{getPublicacionSeleccionada().titulo.toUpperCase()}}
+        </div>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.navigator.popPage()">
+                <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+    <br><br>
+    <ons-list ng-show="(getComentarios().length !== 0)">
+
+        <ons-list-item class="list-item-container"
+                       ng-repeat="comentario in getComentarios()">
+
+            <div class="name">
+                <p style="word-break: break-all;">
+                    <i class="fa ion-chatbubble fa-lg" style="color: lightblue"></i>
+                    {{comentario.comentario}}
+                </p>
+            </div>
+            <div class="location">
+                <span ng-show="(comentario.respuesta !== null)">
+                    <p style="word-break: break-all;">
+                        <i class="fa ion-chatbubbles fa-lg" style="color: green"></i>
+                        {{comentario.respuesta}}
+                    </p>
+                </span>
+                <span class="labelito labelito-warning" 
+                      ng-show="(comentario.respuesta === null)">
+                    Sin respuesta
+                </span>
+            </div>
+        </ons-list-item>
+
+    </ons-list>
+
+    <ons-list modifier="inset" class="settings-list" style="text-align: center"
+              ng-show="(getComentarios().length === 0)">
+        <ons-list-item>
+            No hay preguntas
+        </ons-list-item>
+    </ons-list>
+
+
+</ons-page>
+

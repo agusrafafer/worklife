@@ -1,0 +1,45 @@
+<ons-navigator var="app.navigator">
+    <ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">
+
+                Mi Reputaci&oacute;n
+
+            </div>
+            <div class="right">
+
+            </div>
+        </ons-toolbar>
+
+        <ons-modal var="modal">
+            <ons-icon icon="ion-load-c" spin="true"></ons-icon>
+            <br><br>
+            Aguarde...
+        </ons-modal>
+
+        <div class="settings-header">Como Cliente:</div>
+
+        <ons-list modifier="inset" class="settings-list" style="text-align: center">
+            <ons-list-item>
+                <ons-icon ng-repeat="n in []| range: getReputacionCliente()" icon="fa-star" style="color: orange" fixed-width="false"></ons-icon>
+                <br>
+                {{(getReputacionCliente() === 0)?'':(getReputacionCliente() === 1)?'MALO':(getReputacionCliente() === 2)?'REGULAR':(getReputacionCliente() === 3)?'BUENO':(getReputacionCliente() === 4)?'MUY BUENO':'EXCELENTE'}}
+            </ons-list-item>
+        </ons-list>
+
+        <div class="settings-header">Como Proveedor:</div>
+
+        <ons-list modifier="inset" class="settings-list" style="text-align: center">
+            <ons-list-item>
+                <ons-icon ng-repeat="n in []| range: getReputacionProveedor()" icon="fa-star" style="color: orange" fixed-width="false"></ons-icon>
+                <br>
+                {{(getReputacionProveedor() === 0)?'':(getReputacionProveedor() === 1)?'MALO':(getReputacionProveedor() === 2)?'REGULAR':(getReputacionProveedor() === 3)?'BUENO':(getReputacionProveedor() === 4)?'MUY BUENO':'EXCELENTE'}}
+            </ons-list-item>
+        </ons-list>
+
+    </ons-page>
+</ons-navigator>

@@ -1,0 +1,62 @@
+<ons-page style="background-color: white">
+
+    <ons-list ng-controller="usuarioCtrl">
+        
+        <ons-list-item 
+            modifier="tappable" class="list__item__line-height"
+            onclick="app.slidingMenu.setMainPage('inicio.html');app.slidingMenu.close();">
+            <i class="fa fa-home fa-lg" style="color: #666"></i>
+            &nbsp; Inicio
+        </ons-list-item>
+        
+        <ons-list-item ng-hide="isLogueado()"
+            modifier="tappable" class="list__item__line-height"
+            onclick="app.navigator.pushPage('login.html');app.slidingMenu.close();">
+            <i class="fa ion-log-in fa-lg" style="color: #666"></i>
+            &nbsp; Login
+        </ons-list-item>
+        
+        <ons-list-item ng-hide="isLogueado()"
+            modifier="tappable" class="list__item__line-height"
+            onclick="app.navigator.pushPage('registro.html');app.slidingMenu.close();">
+            <i class="fa ion-person-add fa-lg" style="color: #666"></i>
+            &nbsp; Registrarme
+        </ons-list-item>
+        
+        <ons-list-header ng-show="isLogueado()"
+            class="list__header ons-list-header-inner">
+            Mi cuenta
+        </ons-list-header>
+        
+        
+        <ons-list-item ng-show="isLogueado()"
+            modifier="tappable" class="list__item__line-height"
+            ng-click="reputacion();app.slidingMenu.close();">
+            <i class="fa ion-trophy fa-lg" style="color: #666"></i>
+            &nbsp; Mi Reputacion
+        </ons-list-item>
+        
+        <ons-list-item ng-show="isLogueado()"
+            modifier="tappable" class="list__item__line-height"
+            ng-click="contrataciones('recibida');app.slidingMenu.close();">
+            <i class="fa ion-ios-email-outline fa-lg" style="color: #666"></i>
+            &nbsp; Cont. Recibidos
+        </ons-list-item>
+        
+        <ons-list-item ng-show="isLogueado()"
+            modifier="tappable" class="list__item__line-height"
+            ng-click="contrataciones('realizada');app.slidingMenu.close();">
+            <i class="fa ion-person-stalker fa-lg" style="color: #666"></i>
+            &nbsp; Cont. Realizados
+        </ons-list-item>
+        
+        <ons-list-item ng-show="isLogueado()"
+            modifier="tappable" class="list__item__line-height"
+            ng-click="logout();app.slidingMenu.close();">
+            <i class="fa ion-log-out fa-lg" style="color: #666"></i>
+            &nbsp; Salir
+        </ons-list-item>
+
+    </ons-list>
+    
+</ons-page>

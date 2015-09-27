@@ -1,0 +1,96 @@
+<ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.navigator.popPage()">
+                <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+
+            Detalle Contacto {{getContratacionSeleccionada().idPublicacion.titulo}}
+
+        </div>
+        <div class="right">
+
+        </div>
+    </ons-toolbar>
+
+    <div class="card">
+        <ons-carousel style="text-align: center; height: 250px; width: 100%; margin-top: 50px;" swipeable overscrollable auto-scroll>
+            <ons-carousel-item ng-repeat="foto in getContratacionSeleccionada().idPublicacion.imagenCollection">
+                <img alt="" src="http://www.worklife.com.ar/wl/web/javax.faces.resource/publi/{{foto.url}}?ln=img">
+            </ons-carousel-item>
+        </ons-carousel>
+    </div>
+
+    <ons-list style="border-top: none">
+        <ons-list-item style="line-height: 1; padding: 0;">
+            <ons-row class="action">
+                <ons-col id="idLnkVerCalifiOtor" 
+                         class="action-col" 
+                         ng-click="verCalificacionPop()"
+                         ng-show="((getContratacionSeleccionada().fechaConfirmacion !== null) && (getContratacionSeleccionada().promedioProveedor !== null))">
+                    <div class="action-icon" style="color: blue"><ons-icon icon="ion-android-star-half"></ons-icon></div>
+                    <div class="action-label" style="color: blue">Ver calificaci&oacute;n</div>
+                </ons-col>
+
+                <ons-col class="action-col" 
+                         ng-show="((getContratacionSeleccionada().fechaConfirmacion !== null) && (getContratacionSeleccionada().promedioProveedor === null))">
+                    <div class="action-icon" style="color: blue"><ons-icon icon="ion-android-star-half"></ons-icon></div>
+                    <div class="action-label" style="color: blue">Calificar</div>
+                </ons-col>
+
+                <ons-col class="action-col" 
+                         ng-show="(getContratacionSeleccionada().fechaCancelacion !== null)">
+                    <div class="action-icon" style="color: red"><ons-icon icon="fa fa-calendar"></ons-icon></div>
+                    <div class="action-label" style="color: red">Cancelada: {{getContratacionSeleccionada().fechaCancelacion | date:'dd/MM/yyyy'}}</div>
+                </ons-col>
+
+                <ons-col class="action-col"
+                         ng-click="cancelarContratacion()"
+                         ng-show="((getContratacionSeleccionada().fechaConfirmacion === null) && (getContratacionSeleccionada().fechaCancelacion === null))">
+                    <div class="action-icon" style="color: red"><ons-icon icon="ion-close-round"></ons-icon></div>
+                    <div class="action-label" style="color: red">Cancelar</div>
+                </ons-col>
+
+            </ons-row>
+        </ons-list-item>
+    </ons-list>
+
+    <script type="text/ons-template" id="popover1.html">
+        <ons-popover cancelable>
+        <p style="text-align: center; opacity: 0.5;">Prueba popover.</p>
+        </ons-popover>
+    </script>
+
+    <ons-list style="margin-top: 12px;">
+        <ons-list-item>
+            <div class="prop-desc">
+                <i class="fa ion-person"></i> 
+                {{getNombreApellidoContratacion()}}
+            </div>
+        </ons-list-item>
+
+        <ons-list-item>
+            <div class="prop-desc">
+                <i class="fa ion-email"></i> 
+                {{getEmailContratacion()}}
+            </div>
+        </ons-list-item>
+
+        <ons-list-item>
+            <div class="prop-desc">
+                <i class="fa fa-map-marker"></i> 
+                {{getDireccionContratacion()}}
+            </div>
+        </ons-list-item>
+
+
+
+
+
+
+    </ons-list>
+
+</ons-page> 

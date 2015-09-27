@@ -1,0 +1,134 @@
+<ons-page on-device-backbutton="limpiarFiltros();app.navigator.popPage()" ng-controller="publicacionCtrl">
+    <ons-toolbar>
+        <div class="right">
+            <ons-toolbar-button ng-click="app.navigator.popPage()">
+                <ons-icon icon="ion-checkmark"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+            Filtrar
+        </div>
+        <div class="left">
+            <ons-toolbar-button ng-click="limpiarFiltros();app.navigator.popPage()">
+                <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <ons-list>
+
+        <ons-list-header>Filtros disponibles</ons-list-header>
+
+        <ons-list-item modifier="chevron" ng-click="mostrarFiltroLocalidades()">
+            <ons-icon icon="fa-map-marker" size="20px"></ons-icon>
+            Ubicacion
+            <span class="list-item-note lucent">{{getLocalidadSeleccionada()===''?'Todas':getLocalidadSeleccionada().localidad}}</span>
+        </ons-list-item>
+
+        <ons-list-item modifier="chevron" ng-click="mostrarFiltroPrestaciones()">
+            <ons-icon icon="fa-briefcase" size="20px"></ons-icon> 
+            Prestaciones
+            <span class="list-item-note lucent">{{getPrestacionSeleccionada()===''?'Todas':getPrestacionSeleccionada().prestacion}}</span>
+        </ons-list-item>
+
+        <ons-list-item modifier="chevron" ng-click="mostrarFiltroFormasCobro()">
+            <ons-icon icon="fa-database" size="20px"></ons-icon>
+            Formas de Cobro
+            <span class="list-item-note lucent">{{getFormaCobroSeleccionada()===''?'Todas':getFormaCobroSeleccionada().formaCobro}}</span>
+        </ons-list-item>
+
+        <ons-list-item modifier="chevron" ng-click="mostrarFiltroMediosPago()">
+            <ons-icon icon="fa-usd" size="20px"></ons-icon>
+            Medios de Pago
+            <span class="list-item-note lucent">{{getMedioPagoSeleccionado()===''?'Todos':getMedioPagoSeleccionado().medioPago}}</span>
+        </ons-list-item>
+
+        <ons-list-header>Otros</ons-list-header>
+
+
+        <ons-list-item>
+            <ons-icon icon="fa-graduation-cap" size="20px"></ons-icon>
+            Matriculados
+            <ons-switch modifier="list-item" 
+                        var="switchMat" 
+                        ng-click="setMatricula()"
+                        ng-if="getMatricula()"
+                        checked
+                        ></ons-switch>
+            <ons-switch modifier="list-item" 
+                        var="switchMat" 
+                        ng-click="setMatricula()"
+                        ng-if="!getMatricula()"
+                        ></ons-switch>
+        </ons-list-item>
+
+        <ons-list-item>
+            <ons-icon icon="fa-history" size="20px"></ons-icon>
+            Disponibilidad 24hs
+            <ons-switch modifier="list-item" 
+                        var="switchDispo" 
+                        ng-click="setDispo()"
+                        ng-if="getDispo()"
+                        checked
+                        ></ons-switch>
+            <ons-switch modifier="list-item" 
+                        var="switchDispo" 
+                        ng-click="setDispo()"
+                        ng-if="!getDispo()"
+                        ></ons-switch>
+        </ons-list-item>
+
+        <ons-list-item>
+            <ons-icon icon="fa-check-circle-o" size="20px"></ons-icon>
+            Garantia
+            <ons-switch modifier="list-item"
+                        var="switchGarantia" 
+                        ng-click="setGarantia()"
+                        ng-if="getGarantia()"
+                        checked
+                        ></ons-switch>
+            <ons-switch modifier="list-item"
+                        var="switchGarantia" 
+                        ng-click="setGarantia()"
+                        ng-if="!getGarantia()"
+                        ></ons-switch>
+        </ons-list-item>
+
+    </ons-list>
+
+    <ons-dialog cancelable="true" var="dialogFiltroLoc">
+        <ons-list>
+            <ons-list-item modifier="tappable" ng-repeat="loc in getLocalidades()" ng-click="setLocalidadSeleccionada($index)">
+                {{loc.localidad}}
+            </ons-list-item>
+        </ons-list>
+    </ons-dialog>
+
+
+    <ons-dialog cancelable="true" var="dialogFiltroFC">
+        <ons-list>
+            <ons-list-item modifier="tappable" ng-repeat="fc in getFormasCobro()" ng-click="setFormaCobroSeleccionada($index)">
+                {{fc.formaCobro}}
+            </ons-list-item>
+        </ons-list>
+    </ons-dialog>
+    
+    <ons-dialog cancelable="true" var="dialogFiltroPrest">
+        <ons-list>
+            <ons-list-item modifier="tappable" ng-repeat="p in getPrestaciones()" ng-click="setPrestacionSeleccionada($index)">
+                {{p.prestacion}}
+            </ons-list-item>
+        </ons-list>
+    </ons-dialog>
+    
+    <ons-dialog cancelable="true" var="dialogFiltroMP">
+        <ons-list>
+            <ons-list-item modifier="tappable" ng-repeat="mp in getMediosPago()" ng-click="setMedioPagoSeleccionado($index)">
+                {{mp.medioPago}}
+            </ons-list-item>
+        </ons-list>
+    </ons-dialog>
+
+</ons-page>
+
+

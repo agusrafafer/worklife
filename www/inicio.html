@@ -1,0 +1,70 @@
+<ons-navigator var="app.navigator">
+    <ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">
+                {{getTituloMenu()}}
+            </div>            
+        </ons-toolbar>
+
+        <ons-modal var="modal">
+            <ons-icon icon="ion-load-c" spin="true"></ons-icon>
+            <br><br>
+            Aguarde...
+        </ons-modal>
+
+        <div style="text-align: center" class="content-padded">
+            <span ng-controller="publicacionCtrl">
+                <input type="search" 
+                       class="search-input" 
+                       style="margin-top: 20px;margin-bottom: 30px;" 
+                       placeholder="Buscar Servicio, Profesion, Educacion"
+                       ng-model="textoBuscado"
+                       ng-keydown="($event.which === 13)?buscar():return;">
+            </span>
+            <span ng-controller="usuarioCtrl">
+                <ons-button modifier="large" ng-hide="isLogueado()"
+                            onclick="app.navigator.pushPage('registro.html')"
+                            style="margin-top: 10px;margin-bottom: 10px;">
+                    <ons-icon icon="ion-social-facebook"></ons-icon>
+                    Registrarme con Facebook 
+                </ons-button>
+
+                <ons-button modifier="large--cta" ng-hide="isLogueado()"
+                            ng-click="app.navigator.pushPage('registro.html')"
+                            style="margin-top: 10px;margin-bottom: 10px;">
+                    <ons-icon icon="ion-email"></ons-icon>
+                    Registrarme con mi correo
+                </ons-button>
+
+                <ons-button modifier="light" ng-hide="isLogueado()"
+                            ng-click="app.navigator.pushPage('login.html')"
+                            style="width: 100%; margin-top: 10px;margin-bottom: 10px;">
+                    Ya poseo cuenta
+                </ons-button>
+
+
+
+                <div>
+                    <p ng-hide="isLogueado()">
+                        Acepto los <a href="#">Terminos y Condiciones</a> de WorkLife
+                    </p>
+                </div>
+
+                <ons-button modifier="light"
+                            ng-click="proximamente()"
+                            style="background-color:#714585; width: 100%; margin-bottom: 10px;color: white;">
+                    Publica Gratis
+                </ons-button>
+            </span>
+            <!--<p> Click "Toggle Menu" to close/open menu, </p>
+            <p> You can also swipe the page left/right.  </p>
+            <img src="images/ico_swipe_right_s.png" alt="">-->
+        </div>
+    </ons-page>
+</ons-navigator>
+
+

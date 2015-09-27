@@ -1,0 +1,23 @@
+<ons-page modifier="shop-details" on-device-backbutton="app.navigator.popPage()" ng-controller="publicacionCtrl">
+    <ons-toolbar>
+        <div class="right">
+            <ons-toolbar-button>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+            {{getPublicacionSeleccionada().titulo.toUpperCase()}}
+        </div>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.navigator.popPage()">
+                <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+    
+    
+    <p style="padding-top: 100px; color: #999; text-align: center">
+        {{getDescripcion()}}
+    </p>
+
+    
+</ons-page>

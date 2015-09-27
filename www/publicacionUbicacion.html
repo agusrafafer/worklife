@@ -1,0 +1,26 @@
+<ons-page modifier="shop-details" on-device-backbutton="app.navigator.popPage()" ng-controller="mapCtrl">
+    <ons-toolbar>
+        <div class="right">
+            <ons-toolbar-button>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+            {{getPublicacionSeleccionada().titulo.toUpperCase()}}
+        </div>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.navigator.popPage()">
+                <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <div id="map_canvas" style="position: absolute; 
+         width:100%; 
+         height: 100%; 
+         margin: 0; 
+         padding: 0;   
+         z-index: -1">
+             
+    </div>
+
+</ons-page>
