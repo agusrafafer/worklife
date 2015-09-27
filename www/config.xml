@@ -40,5 +40,5 @@
     </feature>
     <feature name="InAppBrowser" />
     
-    <gap:plugin name="org.apache.cordova.inappbrowser" source="npm" />
+    <gap:plugin name="org.apache.cordova.inappbrowser" source="npm" version="1.0.1"/>
 </widget>
