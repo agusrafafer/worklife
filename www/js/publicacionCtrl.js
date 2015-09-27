@@ -42,7 +42,7 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
                 .catch(function(data, status) {
                     publicacionFactory.items = [];
                     $scope.modal.hide();
-                    var mensaje = "No autorizado.";
+                    var mensaje = "No autorizado 1.";
                     switch (status) {
                         case 401:
                             mensaje = "No autorizado.";
