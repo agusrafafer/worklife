@@ -17,6 +17,7 @@
     <access origin="*" />
     <preference name="fullscreen" value="true"/>
     <preference name="webviewbounce" value="true"/>
+    <preference name="phonegap-version" value="4.0.0" /> 
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -40,5 +41,5 @@
     </feature>
     <feature name="InAppBrowser" />
     
-    <gap:plugin name="org.apache.cordova.inappbrowser" source="npm" version="1.0.1"/>
+    <gap:plugin name="org.apache.cordova.inappbrowser" version="0.5.2" />
 </widget>
