@@ -15,19 +15,13 @@
             </div>
         </ons-toolbar>
 
-        <ons-modal var="modal">
-            <ons-icon icon="ion-load-c" spin="true"></ons-icon>
-            <br><br>
-            Aguarde...
-        </ons-modal>
-
         <div class="settings-header">Como Cliente:</div>
 
         <ons-list modifier="inset" class="settings-list" style="text-align: center">
             <ons-list-item>
                 <ons-icon ng-repeat="n in []| range: getReputacionCliente()" icon="fa-star" style="color: orange" fixed-width="false"></ons-icon>
-                <br>
-                {{(getReputacionCliente() === 0)?'':(getReputacionCliente() === 1)?'MALO':(getReputacionCliente() === 2)?'REGULAR':(getReputacionCliente() === 3)?'BUENO':(getReputacionCliente() === 4)?'MUY BUENO':'EXCELENTE'}}
+                <br ng-show="(getReputacionCliente() !== 0)">
+                {{(getReputacionCliente() === 0)?'Sin reputación':(getReputacionCliente() === 1)?'MALO':(getReputacionCliente() === 2)?'REGULAR':(getReputacionCliente() === 3)?'BUENO':(getReputacionCliente() === 4)?'MUY BUENO':'EXCELENTE'}}
             </ons-list-item>
         </ons-list>
 
@@ -36,8 +30,8 @@
         <ons-list modifier="inset" class="settings-list" style="text-align: center">
             <ons-list-item>
                 <ons-icon ng-repeat="n in []| range: getReputacionProveedor()" icon="fa-star" style="color: orange" fixed-width="false"></ons-icon>
-                <br>
-                {{(getReputacionProveedor() === 0)?'':(getReputacionProveedor() === 1)?'MALO':(getReputacionProveedor() === 2)?'REGULAR':(getReputacionProveedor() === 3)?'BUENO':(getReputacionProveedor() === 4)?'MUY BUENO':'EXCELENTE'}}
+                <br ng-show="(getReputacionProveedor() !== 0)">
+                {{(getReputacionProveedor() === 0)?'Sin reputación':(getReputacionProveedor() === 1)?'MALO':(getReputacionProveedor() === 2)?'REGULAR':(getReputacionProveedor() === 3)?'BUENO':(getReputacionProveedor() === 4)?'MUY BUENO':'EXCELENTE'}}
             </ons-list-item>
         </ons-list>
 

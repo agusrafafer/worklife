@@ -91,7 +91,7 @@ Onsen.factory('comentarioFactory', function() {
 
 Onsen.factory('wsFactory', function() {
     return {
-        url: "http://www.worklife.com.ar/wl/webresources/ws"
+        url: "http://localhost:8080/wl/webresources/ws"
     };
 });
 

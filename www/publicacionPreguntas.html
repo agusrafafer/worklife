@@ -1,7 +1,10 @@
 <ons-page modifier="shop-details" on-device-backbutton="app.navigator.popPage()" ng-controller="publicacionCtrl">
     <ons-toolbar>
         <div class="right">
-            <ons-toolbar-button ng-show="isLogueado()">Preguntar</ons-toolbar-button>
+            <ons-toolbar-button ng-show="(isLogueado() && (getIdUsuarioLogueado() !== getPublicacionSeleccionada().idUsuario.idUsuario))"
+                                ng-click="app.navigator.pushPage('publicacionPreguntar.html');">
+                Preguntar
+            </ons-toolbar-button>
         </div>
         <div class="center">
             {{getPublicacionSeleccionada().titulo.toUpperCase()}}
@@ -16,6 +19,8 @@
     <ons-list ng-show="(getComentarios().length !== 0)">
 
         <ons-list-item class="list-item-container"
+                       ng-click="(comentario.respuesta === null && isLogueado())?((getIdUsuarioLogueado() === getPublicacionSeleccionada().idUsuario.idUsuario)?responderComentario($index):null):null"
+                       modifier="{{(comentario.respuesta === null && isLogueado())?((getIdUsuarioLogueado() === getPublicacionSeleccionada().idUsuario.idUsuario)?'chevron':''):''}}"
                        ng-repeat="comentario in getComentarios()">
 
             <div class="name">

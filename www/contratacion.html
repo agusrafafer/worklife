@@ -14,14 +14,8 @@
 
             </div>
         </ons-toolbar>
-        
-        <ons-modal var="modal">
-            <ons-icon icon="ion-load-c" spin="true"></ons-icon>
-            <br><br>
-            Aguarde...
-        </ons-modal>
 
-        <ons-list>
+        <ons-list ng-show="(getContratacion().length !== 0)">
 
             <ons-list-item modifier="chevron" class="list-item-container"
                            ng-repeat="contratacion in getContratacion()"
@@ -47,11 +41,18 @@
                             {{contratacion.fecha| date:'dd/MM/yyyy'}}
                         </div>
                         <div class="desc">
-                            <span class="labelito labelito-{{((contratacion.fechaCancelacion === null && contratacion.fechaConfirmacion === null)) ? 'info' : (contratacion.fechaCancelacion !== null) ? 'danger' : (contratacion.fechaConfirmacion !== null) ? 'success' : 'warning'}}"> {{((contratacion.fechaCancelacion === null && contratacion.fechaConfirmacion === null)) ? 'Pendiente' : (contratacion.fechaCancelacion !== null) ? 'Cancelada' : (contratacion.fechaConfirmacion !== null) ? 'Confirmada' : ''}}</span>
+                            <span class="labelito labelito-{{((contratacion.fechaCancelacion === null && contratacion.fechaConfirmacion === null)) ? 'info' : (contratacion.fechaCancelacion !== null) ? 'danger' : (contratacion.fechaConfirmacion !== null) ? 'success' : 'warning'}}"> {{((contratacion.fechaCancelacion === null && contratacion.fechaConfirmacion === null)) ? 'Pendiente' : (contratacion.fechaCancelacion !== null) ? 'Cancelado' : (contratacion.fechaConfirmacion !== null) ? 'Confirmado' : ''}}</span>
                         </div>
                     </ons-col>
                     <ons-col width="40px"></ons-col>
                 </ons-row>
+            </ons-list-item>
+        </ons-list>
+
+        <ons-list modifier="inset" class="settings-list" style="text-align: center"
+                  ng-show="(getContratacion().length === 0)">
+            <ons-list-item>
+                No hay contactos
             </ons-list-item>
         </ons-list>
 

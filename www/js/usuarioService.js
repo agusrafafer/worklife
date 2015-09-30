@@ -134,6 +134,70 @@ Onsen.service('usuarioService', function($http, $q, wsFactory) {
 
         return promise;
     };
+    
+    this.publicaciones = function(idUsuario) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.get(wsFactory.url + '/publicaciones/' + idUsuario)
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.eliminarPublicacion = function(idPublicacion) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.post(wsFactory.url + '/publicacion/eliminar', {idPublicacion: idPublicacion})
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.finalizarPublicacion = function(idPublicacion) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.put(wsFactory.url + '/publicacion/finalizar', {idPublicacion: idPublicacion})
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.republicarPublicacion = function(idPublicacion) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.put(wsFactory.url + '/publicacion/republicar', {idPublicacion: idPublicacion})
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
 
     this.redondearNumero = function(numero) {
         var decimals = 2;

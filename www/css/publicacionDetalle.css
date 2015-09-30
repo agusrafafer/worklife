@@ -101,3 +101,8 @@
   vertical-align: -0px;
   opacity: 0.5;
 }
+
+.marquee {
+right: -200px;
+width: 200px;
+}

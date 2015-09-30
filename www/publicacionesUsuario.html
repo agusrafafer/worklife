@@ -1,0 +1,57 @@
+<ons-navigator var="app.navigator">
+
+    <ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">
+                Tus publicaciones
+            </div>
+            <div class="right">
+
+            </div>
+        </ons-toolbar>
+
+        <ons-list>
+
+            <ons-list-item class="list-item-container"
+                           modifier="chevron"
+                           ng-repeat="publicacion in getPublicacionesPorUsuario()"
+                           ng-click="mostrarDetallePublicacionesPorUsuario($index)"
+                           >
+                <ons-row>
+                    <ons-col width="95px">
+                        <img src="https://placeholdit.imgix.net/~text?txtsize=12&amp;txt=%27Sin+imagenes%27&amp;w=90&amp;h=90" 
+                             alt="Sin imagenes" title="Sin imagenes"
+                             class="thumbnail"
+                             ng-show="(publicacion.imagenCollection.length === 0)"
+                             >
+                        <img src="http://www.worklife.com.ar/wl/web/javax.faces.resource/publi/t{{publicacion.imagenCollection[0].url}}?ln=img" 
+                             alt="" class="thumbnail"
+                             ng-show="(publicacion.imagenCollection.length !== 0)">
+                    </ons-col>
+                    <ons-col>
+                        <div class="name">
+                            {{publicacion.titulo}}
+                        </div>
+                        <div class="location">
+                            <i class="fa fa-map-marker"></i> {{publicacion.idLocalidad.localidad}}, {{publicacion.idLocalidad.idDepartamento.idProvincia.provincia}}
+                        </div>
+                        <div class="desc">
+                            <span class="labelito labelito-info"
+                                  ng-show="(publicacion.fechaFinPublicacion !== null)"
+                                  >
+                                Finalizada
+                            </span>
+                        </div>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+        </ons-list>
+
+
+    </ons-page>
+
+</ons-navigator>

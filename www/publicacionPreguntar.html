@@ -1,0 +1,36 @@
+<ons-page modifier="shop-details" on-device-backbutton="app.navigator.popPage()" ng-controller="publicacionCtrl">
+    <ons-toolbar>
+        <div class="right">
+            
+        </div>
+        <div class="center">
+            Nueva Pregunta
+        </div>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.navigator.popPage()">
+                <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+    <br><br>
+    <ons-list modifier="inset" style="margin-top: 10px">
+
+        <ons-list-item>
+            <textarea class="textarea textarea--transparent" 
+                      placeholder="Tu pregunta" 
+                      style="width: 100%; height: 100px;"
+                      ng-model="comentario"></textarea>
+        </ons-list-item>
+
+    </ons-list>
+
+    <div style="padding: 10px 9px">
+        <ons-button modifier="large" style="margin: 0 auto;" ng-click="registrarComentario(false, '')">
+            <ons-icon icon="fa ion-paper-airplane"></ons-icon>
+            &nbsp;Enviar
+        </ons-button>
+    </div>
+
+
+</ons-page>
+

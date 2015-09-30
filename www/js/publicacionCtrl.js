@@ -12,6 +12,13 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
     $scope.pagIni = 0;
     $scope.pagTam = 10;
     $scope.descripcion = "";
+    $scope.comentario = "";
+
+    $scope.crearModalEnRunTime = function() {
+        var elm = $("<ons-modal var=modal><ons-icon icon='ion-load-c' spin='true'></ons-icon><br><br>Aguarde...</ons-modal>");
+        elm.appendTo($("body")); // Insert to the DOM first
+        ons.compile(elm[0]); // The argument must be a HTMLElement object
+    };
 
     $scope.buscar = function() {
         if ($scope.textoBuscado === '' || $scope.textoBuscado.length < 2) {
@@ -22,7 +29,8 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
             return;
         }
 
-        $scope.modal.show();
+       $scope.crearModalEnRunTime();       
+       $scope.modal.show();
 
         publicacionFactory.textoBuscado = $scope.textoBuscado;
 
@@ -366,7 +374,9 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
     };
 
     $scope.registrarContratacion = function() {
-        $scope.modal.show();
+       $scope.crearModalEnRunTime();        
+       $scope.modal.show();
+       
         $scope.ons.notification.confirm({
             message: '¿Seguro deseas contactar?',
             buttonLabels: ['No', 'Si'],
@@ -421,17 +431,21 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
         });
     };
 
-    $scope.comnetarios = function() {
-        $scope.modal.show();
+    $scope.comentarios = function() {
+       $scope.crearModalEnRunTime();        
+       $scope.modal.show();
 
         publicacionService.comentarios(publicacionFactory.seleccionada.idPublicacion)
                 .then(function(data) {
                     var respuesta = data.respuesta;
                     if (respuesta === 'OK') {
                         comentarioFactory.items = data.contenido;
-                        console.log(JSON.stringify(comentarioFactory.items));
                         $scope.modal.hide();
-                        $scope.app.navigator.pushPage('publicacionPreguntas.html');
+                        if ($scope.app.navigator.getCurrentPage().name === 'publicacionDetalle.html') {
+                            $scope.app.navigator.pushPage('publicacionPreguntas.html');
+                        } else {
+                            $scope.app.navigator.popPage();
+                        }
                     } else {
                         $scope.modal.hide();
                         $scope.ons.notification.alert({
@@ -454,7 +468,7 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
                     });
                 });
     };
-    
+
     $scope.getComentarios = function() {
         return comentarioFactory.items;
     };
@@ -468,6 +482,61 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
         return true;
     };
 
+    $scope.getIdUsuarioLogueado = function() {
+        return usuarioFactory.usuario.idUsuario;
+    };
+
+    $scope.registrarComentario = function(contestado, idComentario) {
+       $scope.crearModalEnRunTime();        
+       $scope.modal.show();
+
+        // Presiono Si
+        var idPublicacion = publicacionFactory.seleccionada.idPublicacion;
+        var mailUsuario = usuarioFactory.usuario.email;
+
+
+        publicacionService.registrarComentario(mailUsuario, idPublicacion, $scope.comentario, contestado, idComentario)
+                .then(function(data) {
+                    var respuesta = data.respuesta;
+                    if (respuesta === 'OK') {
+                        var idComentario = data.contenido;
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            message: 'Mensaje enviado con exito'
+                        });
+                        $scope.comentarios();
+                    } else {
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                        });
+                    }
+                })
+                .catch(function(data, status) {
+                    $scope.modal.hide();
+                    var mensaje = "No autorizado.";
+                    switch (status) {
+                        case 401:
+                            mensaje = "No autorizado.";
+                            break;
+                    }
+                    $scope.ons.notification.alert({
+                        title: 'Info',
+                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                    });
+                });
+    };
+
+    $scope.responderComentario = function(index) {
+        comentarioFactory.seleccionado = comentarioFactory.items[index];
+        $scope.app.navigator.pushPage('publicacionResponder.html');
+    };
+
+    $scope.getComentarioSeleccionado = function() {
+        return comentarioFactory.seleccionado;
+    };
 
 }
 

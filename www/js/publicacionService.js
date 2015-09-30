@@ -55,6 +55,22 @@ Onsen.service('publicacionService', function($http, $q, wsFactory) {
         return promise;
     };
     
+    this.registrarComentario = function(mailUsuario, idPublicacion, comentario, contestado, idComentario) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.post(wsFactory.url + '/comentarios', {mailUsuario: mailUsuario, idPublicacion: idPublicacion, comentario: comentario, contestado: contestado, idComentario: idComentario})
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
     
 });
 

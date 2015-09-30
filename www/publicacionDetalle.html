@@ -1,10 +1,15 @@
 <ons-page modifier="shop-details" on-device-backbutton="app.navigator.popPage()" ng-controller="publicacionCtrl">
     <ons-toolbar>
         <div class="right">
-            
+
         </div>
         <div class="center">
-            {{getPublicacionSeleccionada().titulo.toUpperCase()}}
+            <div ons-if-orientation="portrait">
+                {{getPublicacionSeleccionada().titulo.toUpperCase().substring(0, 8)}}...
+            </div>
+            <div ons-if-orientation="landscape">
+                {{getPublicacionSeleccionada().titulo.toUpperCase()}}
+            </div>
         </div>
         <div class="left">
             <ons-toolbar-button ng-click="app.navigator.popPage()">
@@ -31,20 +36,47 @@
             <ons-row class="action">
 
 
-                <ons-col class="action-col" ng-click="comnetarios()">
+                <ons-col class="action-col" 
+                         ng-controller="usuarioCtrl"
+                         ng-click="eliminarPublicacionUsuario()"
+                         ng-show="(isLogueado() && (getIdUsuarioLogueado() === getPublicacionSeleccionada().idUsuario.idUsuario))">
+                    <div class="action-icon" style="color: red"><ons-icon icon="ion-close-round"></ons-icon></div>
+                    <div class="action-label" style="color: red">Eliminar</div>
+                </ons-col>
+
+                <ons-col class="action-col" ng-click="comentarios()">
                     <div class="action-icon" style="color: blue"><ons-icon icon="ion-chatboxes"></ons-icon></div>
                     <div class="action-label" style="color: blue">Preguntas</div>
                 </ons-col>
-                
+
                 <ons-col class="action-col" ng-click="mostrarDescripcion()">
                     <div class="action-icon"><ons-icon icon="ion-clipboard" style="color: blue"></ons-icon></div>
                     <div class="action-label" style="color: blue">Descripcion</div>
                 </ons-col>
 
-                <ons-col class="action-col" ng-click="registrarContratacion()" ng-show="isLogueado()">
+                <ons-col class="action-col" 
+                         ng-click="registrarContratacion()" 
+                         ng-show="(isLogueado() && (getIdUsuarioLogueado() !== getPublicacionSeleccionada().idUsuario.idUsuario))">
                     <div class="action-icon"><ons-icon icon="ion-share" style="color: blue"></ons-icon></div>
                     <div class="action-label" style="color: blue">Contactar</div>
                 </ons-col>
+
+                <ons-col class="action-col" 
+                         ng-controller="usuarioCtrl"
+                         ng-click="republicarPublicacionUsuario()"
+                         ng-show="(isLogueado() && (getIdUsuarioLogueado() === getPublicacionSeleccionada().idUsuario.idUsuario) && (getPublicacionSeleccionada().fechaFinPublicacion !== null))">
+                    <div class="action-icon" style="color: blue"><ons-icon icon="ion-loop"></ons-icon></div>
+                    <div class="action-label" style="color: blue">Republicar</div>
+                </ons-col>
+
+                <ons-col class="action-col"
+                         ng-controller="usuarioCtrl"
+                         ng-click="finalizarPublicacionUsuario()"
+                         ng-show="(isLogueado() && (getIdUsuarioLogueado() === getPublicacionSeleccionada().idUsuario.idUsuario) && (getPublicacionSeleccionada().fechaFinPublicacion === null))">
+                    <div class="action-icon" style="color: red"><ons-icon icon="ion-alert"></ons-icon></div>
+                    <div class="action-label" style="color: red">Finalizar</div>
+                </ons-col>
+
 
             </ons-row>
         </ons-list-item>
@@ -64,7 +96,7 @@
                 {{getPublicacionSeleccionada().idFormaCobro.formaCobro}}
             </div>
         </ons-list-item>
-        
+
         <ons-list-item>
             <div class="prop-desc">
                 <i class="fa fa-history"></i>
@@ -77,7 +109,7 @@
                 {{getPublicacionSeleccionada().idPrestacion.prestacion}}
             </div>
         </ons-list-item>
-        
+
         <ons-list-item>
             <div class="prop-desc">
                 <i class="fa fa-usd"></i>
@@ -86,21 +118,21 @@
                 </span>
             </div>
         </ons-list-item>
-        
+
         <ons-list-item>
             <div class="prop-desc">
                 <i class="fa fa-check-circle-o"></i>
                 {{getPublicacionSeleccionada().garantia}}
             </div>
         </ons-list-item>
-        
-        <ons-list-item ng-show="getPublicacionSeleccionada().matricula!==null">
+
+        <ons-list-item ng-show="getPublicacionSeleccionada().matricula !== null">
             <div class="prop-desc">
                 <i class="fa fa-graduation-cap"></i>
                 {{getPublicacionSeleccionada().matricula}}
             </div>
         </ons-list-item>
-        
+
 
     </ons-list>
 

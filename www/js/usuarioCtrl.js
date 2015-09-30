@@ -10,7 +10,7 @@
 
 
 //El controlador de usuarios
-function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB) {
+function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB) {
 
     $scope.usuario = "";
     $scope.nombre = "";
@@ -23,6 +23,12 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
     $scope.reputacionCli = 0;
     $scope.reputacionPro = 0;
 
+    $scope.crearModalEnRunTime = function() {
+        var elm = $("<ons-modal var=modal><ons-icon icon='ion-load-c' spin='true'></ons-icon><br><br>Aguarde...</ons-modal>");
+        elm.appendTo($("body")); // Insert to the DOM first
+        ons.compile(elm[0]); // The argument must be a HTMLElement object
+    };
+
 
     //Método de logueo llamado desde la vista login.html
     $scope.login = function(email, password) {
@@ -33,6 +39,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
 //                getTodos(); // Actualizamos la lista de ToDo's
 //            }
 //        });
+        $scope.crearModalEnRunTime();
         $scope.modal.show();
 
         usuarioService.validarLogin(email, password)
@@ -79,6 +86,11 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
         }
         return true;
     };
+
+    $scope.getIdUsuarioLogueado = function() {
+        return usuarioFactory.usuario.idUsuario;
+    };
+
     $scope.logout = function() {
         $scope.usuario = "";
         usuarioFactory.usuario = "";
@@ -194,6 +206,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
 
 
     $scope.contrataciones = function(tipoContratacion) {
+        $scope.crearModalEnRunTime();
         $scope.modal.show();
 
         usuarioService.setTipoContratacion(tipoContratacion);
@@ -320,6 +333,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
     };
 
     $scope.cancelarContratacion = function() {
+        $scope.crearModalEnRunTime();
         $scope.modal.show();
         $scope.ons.notification.confirm({
             message: '¿Seguro desea cancelar el contacto?',
@@ -371,6 +385,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
 
 
     $scope.confirmarContratacion = function() {
+        $scope.crearModalEnRunTime();
         $scope.modal.show();
         $scope.ons.notification.confirm({
             message: '¿Seguro desea confirmar el contacto?',
@@ -421,6 +436,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
     };
 
     $scope.reputacion = function() {
+        $scope.crearModalEnRunTime();
         $scope.modal.show();
 
         usuarioService.reputacion(usuarioFactory.usuario.email)
@@ -429,7 +445,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
                     if (respuesta === 'OK') {
                         var promCliente = data.contenido.reputacionCliente;
                         var promProveedor = data.contenido.reputacionProveedor;
-                        
+
                         usuarioService.setReputacionComoCli(usuarioService.redondearReputacion(promCliente));
                         usuarioService.setReputacionComoPro(usuarioService.redondearReputacion(promProveedor));
                         $scope.modal.hide();
@@ -456,20 +472,225 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory
                     });
                 });
     };
-    
+
     $scope.getReputacionCliente = function() {
         return usuarioService.getReputacionComoCli();
     };
-    
+
     $scope.getReputacionProveedor = function() {
         return usuarioService.getReputacionComoPro();
     };
 
+    $scope.publicacionesPorUsuario = function() {
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
+        usuarioService.publicaciones(usuarioFactory.usuario.idUsuario)
+                .then(function(data) {
+                    var respuesta = data.respuesta;
+                    if (respuesta === 'OK') {
+                        $scope.modal.hide();
+                        publicacionFactory.items = data.contenido;
+
+                        if ($scope.app.navigator.getCurrentPage().name === 'publicacionDetalle.html') {
+                            $scope.app.navigator.popPage();
+                        } else {
+                            $scope.app.slidingMenu.setMainPage('publicacionesUsuario.html');
+                        }
+                    } else {
+                        publicacionFactory.items = [];
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                        });
+                    }
+                })
+                .catch(function(data, status) {
+                    publicacionFactory.items = [];
+                    $scope.modal.hide();
+                    var mensaje = "No autorizado.";
+                    switch (status) {
+                        case 401:
+                            mensaje = "No autorizado.";
+                            break;
+                    }
+                    $scope.ons.notification.alert({
+                        title: 'Info',
+                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                    });
+                });
+    };
+
+    $scope.getPublicacionesPorUsuario = function() {
+        return publicacionFactory.items;
+    };
+
+    $scope.getPublicacionSeleccionada = function() {
+        return publicacionFactory.seleccionada;
+    };
+
+    $scope.mostrarDetallePublicacionesPorUsuario = function(index) {
+        publicacionFactory.seleccionada = publicacionFactory.items[index];
+        $scope.app.navigator.pushPage('publicacionDetalle.html');
+    };
+
+    $scope.getComentariosPublicacionSinRespuesta = function(arrayComentarios) {
+        var cont = 0;
+        for (var i in arrayComentarios)
+        {
+            if (arrayComentarios[i].contestado)
+                cont++;
+
+        }
+        return cont;
+    };
+
+    $scope.eliminarPublicacionUsuario = function() {
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
+        $scope.ons.notification.confirm({
+            message: '¿Seguro deseas eliminar esta publicacion?',
+            buttonLabels: ['No', 'Si'],
+            title: 'Info',
+            callback: function(idx) {
+                switch (idx) {
+                    case 0:
+                        // Presiono No
+                        $scope.modal.hide();
+                        break;
+                    case 1:
+                        // Presiono Si
+                        var idPublicacion = publicacionFactory.seleccionada.idPublicacion;
+                        usuarioService.eliminarPublicacion(idPublicacion)
+                                .then(function(data) {
+                                    var respuesta = data.respuesta;
+                                    if (respuesta === 'OK') {
+                                        idPublicacion = data.contenido;
+                                        $scope.modal.hide();
+                                        $scope.ons.notification.alert({
+                                            title: 'Info',
+                                            message: 'Publicacion eliminada con exito'
+                                        });
+                                        $scope.publicacionesPorUsuario();
+                                    } else {
+                                        $scope.modal.hide();
+                                        $scope.ons.notification.alert({
+                                            title: 'Info',
+                                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                                        });
+                                    }
+                                })
+                                .catch(function(data, status) {
+                                    $scope.modal.hide();
+                                    var mensaje = "No autorizado.";
+                                    switch (status) {
+                                        case 401:
+                                            mensaje = "No autorizado.";
+                                            break;
+                                    }
+                                    $scope.ons.notification.alert({
+                                        title: 'Info',
+                                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                                    });
+                                });
+                        break;
+                }
+            }
+        });
+    };
+
+    $scope.finalizarPublicacionUsuario = function() {
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
+        // Presiono Si
+        var idPublicacion = publicacionFactory.seleccionada.idPublicacion;
+
+
+        usuarioService.finalizarPublicacion(idPublicacion)
+                .then(function(data) {
+                    var respuesta = data.respuesta;
+                    if (respuesta === 'OK') {
+                        idPublicacion = data.contenido;
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            message: 'Publicacion finalizada con exito'
+                        });
+                        $scope.publicacionesPorUsuario();
+                    } else {
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                        });
+                    }
+                })
+                .catch(function(data, status) {
+                    $scope.modal.hide();
+                    var mensaje = "No autorizado.";
+                    switch (status) {
+                        case 401:
+                            mensaje = "No autorizado.";
+                            break;
+                    }
+                    $scope.ons.notification.alert({
+                        title: 'Info',
+                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                    });
+                });
+    };
+
+    $scope.republicarPublicacionUsuario = function() {
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
+        // Presiono Si
+        var idPublicacion = publicacionFactory.seleccionada.idPublicacion;
+
+
+        usuarioService.republicarPublicacion(idPublicacion)
+                .then(function(data) {
+                    var respuesta = data.respuesta;
+                    if (respuesta === 'OK') {
+                        idPublicacion = data.contenido;
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            message: 'Publicacion republicada con exito'
+                        });
+                        $scope.publicacionesPorUsuario();
+                    } else {
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                        });
+                    }
+                })
+                .catch(function(data, status) {
+                    $scope.modal.hide();
+                    var mensaje = "No autorizado.";
+                    switch (status) {
+                        case 401:
+                            mensaje = "No autorizado.";
+                            break;
+                    }
+                    $scope.ons.notification.alert({
+                        title: 'Info',
+                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                    });
+                });
+    };
+
+
 }
 
 
-Onsen.controller('usuarioCtrl', function($scope, usuarioService, usuarioFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB) {
-    usuarioCtrl($scope, usuarioService, usuarioFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB);
+Onsen.controller('usuarioCtrl', function($scope, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB) {
+    usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB);
 });
 
 
