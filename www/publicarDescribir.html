@@ -1,0 +1,170 @@
+<ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+    <form name="frmDescribir" novalidate>
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="atrasDescribirPublicar()">
+                    <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+                </ons-toolbar-button>
+                <!--<ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>-->
+            </div>
+            <div class="center">
+                Describir publicaci&oacute;n
+            </div>
+            <div class="right">
+                <ons-toolbar-button ng-click="validarDescribirPublicacion()"
+                                    ng-show="frmDescribir.$valid">
+                    <ons-icon icon="ion-checkmark-round" 
+                              fixed-width="false" 
+                              style="vertical-align: -4px;">
+
+                    </ons-icon>
+                </ons-toolbar-button>
+                <ons-toolbar-button ng-show="!frmDescribir.$valid"
+                                    ng-disabled="!frmDescribir.$valid">
+                    <ons-icon icon="ion-checkmark-round" 
+                              fixed-width="false" 
+                              style="vertical-align: -4px;">
+
+                    </ons-icon>
+                </ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+
+        {{getParametroParaPublicar('describir')}}
+        <ons-list modifier="inset" style="margin-top: 10px">
+            <ons-list-item>
+                <span ng-repeat="i in []| range:categoriasSel.length">
+                    {{categoriasSel[i].categoriaEs}}&nbsp;<ons-icon icon="ion-arrow-right-b"></ons-icon>&nbsp;
+                </span>
+            </ons-list-item>
+
+            <ons-list-item>
+                <input type="text" 
+                       class="text-input text-input--transparent" 
+                       placeholder="Titulo de la publicación" 
+                       style="width: 100%"
+                       ng-model="tituloPublicacion"
+                       required
+                       ng-maxlength="50"
+                       maxlength="50">
+            </ons-list-item>
+            <ons-list-item>
+                <textarea class="textarea textarea--transparent" 
+                          placeholder="Describe" 
+                          style="width: 100%; height: 100px;"
+                          ng-model="descripcionPublicacion"
+                          required
+                          ng-maxlength="200"
+                          maxlength="200"
+                          ></textarea>
+            </ons-list-item>
+            <ons-list-item>
+                <input type="text" 
+                       class="text-input text-input--transparent" 
+                       placeholder="Teléfono" 
+                       style="width: 100%"
+                       ng-model="telefonoPublicacion">
+            </ons-list-item>
+            <ons-list-item>
+                <span style="font-size: 14px;">Disponibilidad 24 Hs&nbsp;
+                    <ons-switch modifier="list-item" 
+                                var="switchDispo" 
+                                ng-click="setDispo()"
+                                ng-if="getDispo()"
+                                checked
+                                ></ons-switch>
+                    <ons-switch modifier="list-item" 
+                                var="switchDispo" 
+                                ng-click="setDispo()"
+                                ng-if="!getDispo()"
+                                ></ons-switch>
+                </span>
+            </ons-list-item>
+            <ons-list-item>
+                <input type="text"
+                       ng-pattern="/^\d{0,9}(\.\d{1,9})?$/"
+                       ng-maxlength="12"
+                       maxlength="12"
+                       class="text-input text-input--transparent" 
+                       placeholder="Precio $" 
+                       ng-model="precioPublicacion"
+                       style="width: 100%">
+            </ons-list-item>
+            <ons-list-item>
+                <input type="text" 
+                       class="text-input text-input--transparent" 
+                       placeholder="Matricula" 
+                       style="width: 100%"
+                       maxlength="45"
+                       ng-maxlength="45"
+                       ng-model="matriculaPublicacion">
+            </ons-list-item>
+            <ons-list-item modifier="chevron" ng-click="listarClase('formacobro')">
+                <ons-icon icon="fa fa-database fa-lg" style="font-size: 14px;">&nbsp;Formas de cobro</ons-icon>
+                <span class="list-item-note lucent">{{getFormaCobroSeleccionada() === '' ? 'Todas' : getFormaCobroSeleccionada().formaCobro}}</span>
+            </ons-list-item>
+            <ons-list-item modifier="chevron" ng-click="listarClase('prestacion')">
+                <ons-icon icon="fa fa-briefcase fa-lg" style="font-size: 14px;">&nbsp;Prestaciones</ons-icon>
+                <span class="list-item-note lucent">{{getPrestacionSeleccionada() === '' ? 'Todas' : getPrestacionSeleccionada().prestacion}}</span>
+            </ons-list-item>
+            <ons-list-item modifier="chevron" ng-click="listarClase('mediopago')">
+                <ons-icon icon="fa fa-usd fa-lg" style="font-size: 14px;">&nbsp;Medios de Pago</ons-icon>
+                <span class="list-item-note lucent">{{getMedioPagoSeleccionado() === '' ? 'Todos' : getMedioPagoSeleccionado().medioPago}}</span>
+            </ons-list-item>
+            <ons-list-item>
+                <span style="font-size: 14px;">Garantia&nbsp;
+                    <ons-switch modifier="list-item"
+                                var="switchGarantia" 
+                                ng-click="setGarantia()()"
+                                ng-if="getGarantia()"
+                                checked
+                                ></ons-switch>
+                    <ons-switch modifier="list-item"
+                                var="switchGarantia" 
+                                ng-click="setGarantia()"
+                                ng-if="!getGarantia()"
+                                ></ons-switch>
+                </span>
+            </ons-list-item>
+            <ons-list-item ng-show="getGarantia()">
+                <textarea class="textarea textarea--transparent" 
+                          style="width: 100%; height: 100px;"
+                          placeholder="Explica tu forma de garantia" 
+                          ng-model="garantiaPublicacion"
+                          ng-maxlength="50"
+                          maxlength="50"
+                          ></textarea>
+            </ons-list-item>
+            
+            <!--<ons-list-item modifier="chevron" ng-click="verCamara()">
+                <ons-icon icon="fa fa-camera fa-lg" style="font-size: 14px;">&nbsp;Imagenes</ons-icon>
+            </ons-list-item>-->
+
+
+        </ons-list>
+
+        <ons-dialog cancelable="true" var="dialogFiltroFC">
+            <ons-list>
+                <ons-list-item modifier="tappable" ng-repeat="fc in getListarClase('formacobro')" ng-click="setFormaCobroSeleccionada($index)">
+                    {{fc.formaCobro}}
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+
+        <ons-dialog cancelable="true" var="dialogFiltroPrest">
+            <ons-list>
+                <ons-list-item modifier="tappable" ng-repeat="p in getListarClase('prestacion')" ng-click="setPrestacionSeleccionada($index)">
+                    {{p.prestacion}}
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+
+        <ons-dialog cancelable="true" var="dialogFiltroMP">
+            <ons-list>
+                <ons-list-item modifier="tappable" ng-repeat="mp in getListarClase('mediopago')" ng-click="setMedioPagoSeleccionado($index)">
+                    {{mp.medioPago}}
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+    </form>
+</ons-page>

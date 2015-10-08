@@ -593,7 +593,7 @@ ons-carousel[disabled] {
   -ms-flex: 1;
   flex: 1;
   display: block;
-  width: 100%;
+  width: 50%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;

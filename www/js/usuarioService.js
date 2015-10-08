@@ -198,6 +198,86 @@ Onsen.service('usuarioService', function($http, $q, wsFactory) {
 
         return promise;
     };
+    
+    this.categoria = function(nombreCateoriaPadre) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.get(wsFactory.url + '/categoria/' + nombreCateoriaPadre)
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.categorias = function(idCateoriaPadre) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.get(wsFactory.url + '/categorias/' + idCateoriaPadre)
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.listarClase = function(clase) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.get(wsFactory.url + '/listarclase/' + clase)
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.listarUbicacion = function(clase, id, textoBuscado) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+        
+        $http.get(wsFactory.url + '/listarubicacion/' + clase + '/' + id + '/' + textoBuscado)
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
+    
+    this.registrarPublicacion = function(mailUsuario, idCategoriaPadre, idCategoriaFinal, dispo, descripcion, idLocalidad, lat, lng, titulo, precio, idFormaCobro, idPrestacion, idMedioPago, barrio, calleNro, garantiaSiNo, garantia, matricula, telefono) {
+        //defered = diferido (asincrono)
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http.post(wsFactory.url + '/publicacion', {mailUsuario: mailUsuario, idCategoriaPadre: idCategoriaPadre, idCategoriaFinal: idCategoriaFinal, dispo: dispo, descripcion: descripcion, idLocalidad: idLocalidad, lat: lat, lng: lng, titulo: titulo, precio: precio, idFormaCobro: idFormaCobro, idPrestacion: idPrestacion, idMedioPago: idMedioPago, barrio: barrio, calleNro: calleNro, garantiaSiNo: garantiaSiNo, garantia: garantia, matricula: matricula, telefono: telefono})
+                .success(function(data) {
+                    defered.resolve(data);
+                })
+                .error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+        return promise;
+    };
 
     this.redondearNumero = function(numero) {
         var decimals = 2;

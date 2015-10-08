@@ -37,6 +37,30 @@ Onsen.factory('contratRecibFactory', function() {
 });
 
 
+Onsen.factory('paisFactory', function() {
+    
+    return {
+        items: [],
+        seleccionado: ""
+    };
+});
+
+Onsen.factory('provFactory', function() {
+    
+    return {
+        items: [],
+        seleccionada: ""
+    };
+});
+
+Onsen.factory('dptoFactory', function() {
+    
+    return {
+        items: [],
+        seleccionado: ""
+    };
+});
+
 Onsen.factory('localidadFactory', function() {
     
     return {
@@ -86,6 +110,14 @@ Onsen.factory('comentarioFactory', function() {
     return {
         items: [],
         seleccionado: ""
+    };
+});
+
+Onsen.factory('categoriaFactory', function() {
+    
+    return {
+        items: [],
+        seleccionada: ""
     };
 });
 

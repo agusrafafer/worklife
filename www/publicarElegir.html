@@ -1,0 +1,65 @@
+<ons-page on-device-backbutton="app.navigator.popPage()" ng-controller="usuarioCtrl">
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+        </div>
+        <div class="center">
+            Elegir Categoria
+        </div>
+        <div class="right">
+            <ons-toolbar-button ng-show="(getCategorias().length === 0 && getCategoriaSeleccionada() !== '')"
+                                ng-click="cancelarElegirCategoria()">
+                <ons-icon icon="ion-close-round" 
+                          fixed-width="false" 
+                          style="vertical-align: -4px;">
+
+                </ons-icon>
+            </ons-toolbar-button>
+
+            <ons-toolbar-button ng-show="(getCategorias().length === 0 && getCategoriaSeleccionada() !== '')"
+                                ng-click="app.navigator.pushPage('publicarDescribir.html', {categoriasSel: categoriasSel});">
+                <ons-icon icon="ion-checkmark-round" 
+                          fixed-width="false" 
+                          style="vertical-align: -4px;">
+
+                </ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <ons-list modifier="inset" style="margin-top: 10px; margin-bottom: 10px" 
+              ng-show="(getCategorias().length === 0 && getCategoriaSeleccionada() === '')">
+        <ons-list-header>
+            Selecciona una categoria: 
+        </ons-list-header>
+
+        <ons-list-item modifier="chevron" ng-click="categorias(1, -1)">Profesional</ons-list-item>
+        <ons-list-item modifier="chevron" ng-click="categorias(2, -1)">Servicios</ons-list-item>
+        <ons-list-item modifier="chevron" ng-click="categorias(3, -1)">Educacion</ons-list-item>
+
+    </ons-list>
+
+    <ons-list modifier="inset" style="margin-top: 10px; margin-bottom: 10px" 
+              ng-show="(getCategorias().length !== 0)">
+        <ons-list-header>
+            <span ng-repeat="i in []| range:categoriasSel.length">
+                {{categoriasSel[i].categoriaEs}}&nbsp;<ons-icon icon="ion-arrow-right-b"></ons-icon>&nbsp;
+            </span>
+        </ons-list-header>
+        <ons-list-item modifier="chevron" 
+                       ng-repeat="categoria in getCategorias()"
+                       ng-click="categorias(categoria.idCategoria, $index)">
+            {{categoria.categoriaEs}}
+        </ons-list-item>
+    </ons-list>
+    <ons-list modifier="inset" style="margin-top: 10px; margin-bottom: 10px" 
+              ng-show="(getCategorias().length === 0 && getCategoriaSeleccionada() !== '')">
+        <ons-list-item>
+            <span ng-repeat="i in []| range:categoriasSel.length">
+                {{categoriasSel[i].categoriaEs}}&nbsp;<ons-icon icon="ion-arrow-right-b"></ons-icon>&nbsp;
+            </span>
+        </ons-list-item>
+    </ons-list>
+
+</ons-page>

@@ -10,7 +10,7 @@
 
 
 //El controlador de usuarios
-function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB) {
+function usuarioCtrl($scope, $timeout, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, categoriaFactory, formaCobroFactory, prestacionFactory, medioPagoFactory, otrosFiltroFactory, paisFactory, provFactory, dptoFactory, localidadFactory, fBFactory, ngFB) {
 
     $scope.usuario = "";
     $scope.nombre = "";
@@ -22,6 +22,17 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory,
     $scope.idUsuarioFB = "";
     $scope.reputacionCli = 0;
     $scope.reputacionPro = 0;
+    $scope.categoriasSel = [];
+    $scope.tituloPublicacion = "";
+    $scope.descripcionPublicacion = "";
+    $scope.matriculaPublicacion = "";
+    $scope.garantiaPublicacion = "";
+    $scope.precioPublicacion = "";
+    $scope.mapPublicacion;
+    $scope.calleNroPublicacion = "";
+    $scope.barrioPublicacion = "";
+    $scope.telefonoPublicacion = "";
+    var markerPublicacion;
 
     $scope.crearModalEnRunTime = function() {
         var elm = $("<ons-modal var=modal><ons-icon icon='ion-load-c' spin='true'></ons-icon><br><br>Aguarde...</ons-modal>");
@@ -152,14 +163,6 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory,
                         messageHTML: '<strong style=\"color: #ff3333\">Operación denegada: ' + mensaje + '</strong>'
                     });
                 });
-    };
-
-
-    $scope.proximamente = function() {
-        $scope.ons.notification.alert({
-            title: 'Info',
-            messageHTML: '<strong style=\"color: #ff3333\">Proximamente!!</strong>'
-        });
     };
 
 
@@ -539,7 +542,7 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory,
         var cont = 0;
         for (var i in arrayComentarios)
         {
-            if (arrayComentarios[i].contestado)
+            if (arrayComentarios[i].contestado === false)
                 cont++;
 
         }
@@ -548,7 +551,6 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory,
 
     $scope.eliminarPublicacionUsuario = function() {
         $scope.crearModalEnRunTime();
-        $scope.modal.show();
 
         $scope.ons.notification.confirm({
             message: '¿Seguro deseas eliminar esta publicacion?',
@@ -558,10 +560,11 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory,
                 switch (idx) {
                     case 0:
                         // Presiono No
-                        $scope.modal.hide();
+                        //$scope.modal.hide();
                         break;
                     case 1:
                         // Presiono Si
+                        $scope.modal.show();
                         var idPublicacion = publicacionFactory.seleccionada.idPublicacion;
                         usuarioService.eliminarPublicacion(idPublicacion)
                                 .then(function(data) {
@@ -685,12 +688,545 @@ function usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory,
                 });
     };
 
+    $scope.publicar = function() {
+        if ($scope.isLogueado()) {
+            categoriaFactory.seleccionada = '';
+            categoriaFactory.items = [];
+            $scope.app.navigator.pushPage('publicarElegir.html');
+        } else {
+            $scope.ons.notification.alert({
+                title: 'Info',
+                messageHTML: '<strong style=\"color: #ff3333\">Debes ingresar para poder publicar</strong>',
+                callback: function() {
+                    $scope.app.navigator.pushPage('login.html');
+                }
+            });
+        }
+    };
+
+    $scope.categorias = function(idCategoriaPadre, index) {
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
+        if (index === -1) {
+            var categoriaP;
+            switch (idCategoriaPadre) {
+                case 1:
+                    categoriaP = {"idCategoria": 1, "categoriaEs": "Profesional", "descripcion": null, "categoriaEn": null, "categoriaPr": null, "matricula": null};
+                    break;
+                case 2:
+                    categoriaP = {"idCategoria": 2, "categoriaEs": "Servicios", "descripcion": null, "categoriaEn": null, "categoriaPr": null, "matricula": null};
+                    break;
+                case 3:
+                    categoriaP = {"idCategoria": 3, "categoriaEs": "Educacion", "descripcion": null, "categoriaEn": null, "categoriaPr": null, "matricula": null};
+                    break;
+            }
+            categoriaFactory.seleccionada = categoriaP;
+        } else {
+            categoriaFactory.seleccionada = categoriaFactory.items[index];
+        }
+
+        $scope.categoriasSel.push(categoriaFactory.seleccionada);
+
+        usuarioService.categorias(idCategoriaPadre)
+                .then(function(data) {
+                    var respuesta = data.respuesta;
+                    if (respuesta === 'OK') {
+                        categoriaFactory.items = data.contenido;
+                        $scope.modal.hide();
+//                        $scope.$apply();
+//                        $scope.app.slidingMenu.setMainPage('contratacion.html');
+                    } else {
+                        categoriaFactory.seleccionada = '';
+                        categoriaFactory.items = [];
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                        });
+                    }
+                })
+                .catch(function(data, status) {
+                    categoriaFactory.seleccionada = '';
+                    categoriaFactory.items = [];
+                    $scope.modal.hide();
+                    var mensaje = "No autorizado.";
+                    switch (status) {
+                        case 401:
+                            mensaje = "No autorizado.";
+                            break;
+                    }
+                    $scope.ons.notification.alert({
+                        title: 'Info',
+                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                    });
+                });
+    };
+
+    $scope.getCategorias = function() {
+        return categoriaFactory.items;
+    };
+
+    $scope.getCategoriaSeleccionada = function() {
+        return categoriaFactory.seleccionada;
+    };
+
+
+    $scope.cancelarElegirCategoria = function() {
+        $scope.categoriasSel = [];
+        categoriaFactory.seleccionada = '';
+    };
+
+    $scope.getListarClase = function(clase) {
+        switch (clase) {
+            case 'formacobro':
+                return formaCobroFactory.items;
+            case 'prestacion':
+                return prestacionFactory.items;
+            case 'mediopago':
+                return medioPagoFactory.items;
+        }
+    };
+
+    $scope.listarClase = function(clase) {
+
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
+        usuarioService.listarClase(clase)
+                .then(function(data) {
+                    var respuesta = data.respuesta;
+                    if (respuesta === 'OK') {
+                        $scope.modal.hide();
+                        var dialogo;
+                        switch (clase) {
+                            case 'formacobro':
+                                formaCobroFactory.items = data.contenido;
+                                formaCobroFactory.seleccionada = "";
+                                dialogo = $scope.dialogFiltroFC;
+                                break;
+                            case 'prestacion':
+                                prestacionFactory.items = data.contenido;
+                                prestacionFactory.seleccionada = "";
+                                dialogo = $scope.dialogFiltroPrest;
+                                break;
+                            case 'mediopago':
+                                medioPagoFactory.items = data.contenido;
+                                medioPagoFactory.seleccionado = "";
+                                dialogo = $scope.dialogFiltroMP;
+                                break;
+                        }
+
+                        dialogo.show();
+                    } else {
+                        $scope.modal.hide();
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                        });
+                    }
+                })
+                .catch(function(data, status) {
+                    $scope.modal.hide();
+                    var mensaje = "No autorizado.";
+                    switch (status) {
+                        case 401:
+                            mensaje = "No autorizado.";
+                            break;
+                    }
+                    $scope.ons.notification.alert({
+                        title: 'Info',
+                        messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                    });
+                });
+
+    };
+
+    $scope.getFormaCobroSeleccionada = function() {
+        return formaCobroFactory.seleccionada;
+    };
+
+    $scope.setFormaCobroSeleccionada = function(index) {
+        formaCobroFactory.seleccionada = formaCobroFactory.items[index];
+        $scope.dialogFiltroFC.hide();
+    };
+
+    $scope.getPrestacionSeleccionada = function() {
+        return prestacionFactory.seleccionada;
+    };
+
+    $scope.setPrestacionSeleccionada = function(index) {
+        prestacionFactory.seleccionada = prestacionFactory.items[index];
+        $scope.dialogFiltroPrest.hide();
+    };
+
+    $scope.setMedioPagoSeleccionado = function(index) {
+        medioPagoFactory.seleccionado = medioPagoFactory.items[index];
+        $scope.dialogFiltroMP.hide();
+    };
+
+    $scope.getMedioPagoSeleccionado = function() {
+        return medioPagoFactory.seleccionado;
+    };
+
+    $scope.setDispo = function() {
+        var isChecked = $scope.switchDispo.isChecked();
+        otrosFiltroFactory.dispo = isChecked;
+    };
+
+    $scope.getDispo = function() {
+        return otrosFiltroFactory.dispo;
+    };
+
+    $scope.setGarantia = function() {
+        var isChecked = $scope.switchGarantia.isChecked();
+        otrosFiltroFactory.garantia = isChecked;
+    };
+
+    $scope.getGarantia = function() {
+        return otrosFiltroFactory.garantia;
+    };
+
+
+    $scope.validarDescribirPublicacion = function() {
+        var mensaje = '';
+
+        if ($scope.categoriasSel[0].idCategoria === 1 && $scope.matriculaPublicacion === '') {
+            mensaje = 'Debes ingresar una matricula';
+        } else if (formaCobroFactory.seleccionada === '') {
+            mensaje = 'Debe seleccionar una forma de cobro';
+        } else if (prestacionFactory.seleccionada === '') {
+            mensaje = 'Debe seleccionar una prestación';
+        } else if (medioPagoFactory.seleccionado === '') {
+            mensaje = 'Debe seleccionar un medio de pago';
+        } else if (otrosFiltroFactory.garantia === true && $scope.garantiaPublicacion === '') {
+            mensaje = 'Debe explicar la garantia de la publicación';
+        }
+
+
+        if (mensaje !== '') {
+            $scope.ons.notification.alert({
+                title: 'Info',
+                messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+            });
+        } else {
+            $scope.app.navigator.pushPage('publicarUbicar.html', {categoriasSel: $scope.categoriasSel, descripcion: $scope.descripcionPublicacion, titulo: $scope.tituloPublicacion, precio: $scope.precioPublicacion, matricula: $scope.matriculaPublicacion, tel: $scope.telefonoPublicacion});
+        }
+    };
+
+
+    //Inicializacion mapa
+    $timeout(function() {
+        var lat = usuarioFactory.usuario.latitud;
+        var lng = usuarioFactory.usuario.longitud;
+        if (!$scope.isLogueado()) {
+            lat = "-34.603752";
+            lng = "-58.381565";
+        }
+        var latlng = new google.maps.LatLng(lat, lng);
+        var opciones = {
+            zoom: 8,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            disableDefaultUI: true,
+            mapTypeControl: false,
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.LARGE,
+                position: google.maps.ControlPosition.LEFT_CENTER
+            },
+            scaleControl: true,
+            streetViewControl: true,
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.LEFT_BOTTOM
+            }
+        };
+        $scope.mapPublicacion = new google.maps.Map(document.getElementById("map_canvas"), opciones);
+        $scope.overlay = new google.maps.OverlayView();
+        $scope.overlay.draw = function() {
+        }; // empty function required
+        $scope.overlay.setMap($scope.mapPublicacion);
+        $scope.element = document.getElementById('map_canvas');
+
+        markerPublicacion = new google.maps.Marker({
+            position: latlng,
+            map: $scope.mapPublicacion,
+            title: 'Selecciona una ubicación',
+            draggable: true
+        });
+
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: "Selecciona una ubicación"
+        });
+        infoWindow.open($scope.mapPublicacion, markerPublicacion);
+
+        google.maps.event.addListener(markerPublicacion, 'dragend', function() {
+            actualizaPosicion(markerPublicacion.getPosition());
+        });
+
+
+    }, 100);
+
+    $scope.onBlurCalleNroPublicacion = function() {
+        /* change noticed */
+        markerPublicacion.setMap(null);
+
+        var geocoder = new google.maps.Geocoder();
+        var pais = paisFactory.seleccionado !== '' ? (', ' + paisFactory.seleccionado.pais) : '';
+        var loc = localidadFactory.seleccionada !== '' ? (', ' + localidadFactory.seleccionada.localidad) : '';
+
+        var address = $scope.calleNroPublicacion + loc + pais;
+
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                var lat = results[0].geometry.location.lat();
+                var lng = results[0].geometry.location.lng();
+                var latlng = new google.maps.LatLng(lat, lng);
+                $scope.mapPublicacion.setCenter(latlng);
+                markerPublicacion = new google.maps.Marker({
+                    position: latlng,
+                    map: $scope.mapPublicacion,
+                    title: 'Selecciona una ubicación',
+                    draggable: true
+                });
+            } else {
+                //alert("El geocoding no funciona por la siguiente razón: " + status);
+            }
+        });
+
+
+    };
+
+    $scope.promptUbicacion = function(clase, id) {
+        $scope.ons.notification.prompt({
+            title: 'Info',
+            message: "Ingrese " + clase,
+            callback: function(textoUbicacion) {
+                $scope.listarUbicacion(clase, id, textoUbicacion);
+            }
+        });
+    };
+
+
+    $scope.listarUbicacion = function(clase, id, textoUbicacion) {
+        if (textoUbicacion.length < 2) {
+            $scope.ons.notification.alert({
+                title: 'Info',
+                messageHTML: '<strong style=\"color: #ff3333\">Debes ingresar al menos dos letras para buscar la ubicación</strong>'
+            });
+        } else {
+            $scope.crearModalEnRunTime();
+            $scope.modal.show();
+
+            usuarioService.listarUbicacion(clase, id, textoUbicacion)
+                    .then(function(data) {
+                        var respuesta = data.respuesta;
+                        if (respuesta === 'OK') {
+                            $scope.modal.hide();
+                            var dialogo;
+                            switch (clase) {
+                                case 'pais':
+                                    paisFactory.items = data.contenido;
+                                    paisFactory.seleccionado = "";
+                                    dialogo = $scope.dialogFiltroPais;
+                                    break;
+                                case 'provincia':
+                                    provFactory.items = data.contenido;
+                                    provFactory.seleccionada = "";
+                                    dialogo = $scope.dialogFiltroProv;
+                                    break;
+                                case 'dpto':
+                                    dptoFactory.items = data.contenido;
+                                    dptoFactory.seleccionado = "";
+                                    dialogo = $scope.dialogFiltroDpto;
+                                    break;
+                                case 'localidad':
+                                    localidadFactory.items = data.contenido;
+                                    localidadFactory.seleccionada = "";
+                                    dialogo = $scope.dialogFiltroLoc;
+                                    break;
+                            }
+
+                            dialogo.show();
+                        } else {
+                            $scope.modal.hide();
+                            $scope.ons.notification.alert({
+                                title: 'Info',
+                                messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                            });
+                        }
+                    })
+                    .catch(function(data, status) {
+                        $scope.modal.hide();
+                        var mensaje = "No autorizado.";
+                        switch (status) {
+                            case 401:
+                                mensaje = "No autorizado.";
+                                break;
+                        }
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">' + mensaje + '</strong>'
+                        });
+                    });
+        }
+
+    };
+
+    $scope.getListarUbicacion = function(clase) {
+        switch (clase) {
+            case 'pais':
+                return paisFactory.items;
+            case 'provincia':
+                return provFactory.items;
+            case 'dpto':
+                return dptoFactory.items;
+            case 'localidad':
+                return localidadFactory.items;
+        }
+    };
+
+
+    $scope.setPaisSeleccionado = function(index) {
+        paisFactory.seleccionado = paisFactory.items[index];
+        $scope.dialogFiltroPais.hide();
+        $scope.onBlurCalleNroPublicacion();
+    };
+
+    $scope.getPaisSeleccionado = function() {
+        return paisFactory.seleccionado;
+    };
+
+    $scope.setProvSeleccionada = function(index) {
+        provFactory.seleccionada = provFactory.items[index];
+        $scope.dialogFiltroProv.hide();
+    };
+
+    $scope.getProvSeleccionada = function() {
+        return provFactory.seleccionada;
+    };
+
+    $scope.setDptoSeleccionado = function(index) {
+        dptoFactory.seleccionado = dptoFactory.items[index];
+        $scope.dialogFiltroDpto.hide();
+    };
+
+    $scope.getDptoSeleccionado = function() {
+        return dptoFactory.seleccionado;
+    };
+
+
+    $scope.setLocalidadSeleccionada = function(index) {
+        localidadFactory.seleccionada = localidadFactory.items[index];
+        $scope.dialogFiltroLoc.hide();
+        $scope.onBlurCalleNroPublicacion();
+    };
+
+    $scope.getLocalidadSeleccionada = function() {
+        return localidadFactory.seleccionada;
+    };
+
+    $scope.atrasDescribirPublicar = function() {
+        $scope.descripcionPublicacion = "";
+        $scope.tituloPublicacion = "";
+        $scope.precioPublicacion = "";
+        $scope.matriculaPublicacion = "";
+        $scope.telefonoPublicacion = "";
+        $scope.garantiaPublicacion = "";
+        medioPagoFactory.seleccionado = "";
+        medioPagoFactory.items = [];
+        formaCobroFactory.seleccionada = "";
+        formaCobroFactory.items = [];
+        prestacionFactory.seleccionada = "";
+        prestacionFactory.items = [];
+        otrosFiltroFactory.dispo = false;
+        otrosFiltroFactory.garantia = false;
+        $scope.app.navigator.popPage();
+    };
+
+    $scope.atrasUbicarPublicar = function() {
+        $scope.barrioPublicacion = "";
+        $scope.calleNroPublicacion = "";
+        paisFactory.seleccionado = "";
+        paisFactory.items = [];
+        provFactory.seleccionada = "";
+        provFactory.items = [];
+        dptoFactory.seleccionado = "";
+        dptoFactory.items = [];
+        localidadFactory.seleccionada = "";
+        localidadFactory.items = [];
+        $scope.app.navigator.popPage();
+    };
+
+    $scope.getParametroParaPublicar = function(pagina) {
+        $scope.categoriasSel = $scope.app.navigator.getCurrentPage().options.categoriasSel;
+        if (pagina !== 'describir') {
+            $scope.descripcionPublicacion = $scope.app.navigator.getCurrentPage().options.descripcion;
+            $scope.tituloPublicacion = $scope.app.navigator.getCurrentPage().options.titulo;
+            $scope.precioPublicacion = $scope.app.navigator.getCurrentPage().options.precio;
+            $scope.matriculaPublicacion = $scope.app.navigator.getCurrentPage().options.matricula;
+            $scope.telefonoPublicacion = $scope.app.navigator.getCurrentPage().options.tel;
+        }
+    };
+
+    $scope.registrarPublicacion = function() {
+        if (paisFactory.seleccionado !== '' && provFactory.seleccionada !== '' && dptoFactory.seleccionado !== '' && localidadFactory.seleccionada !== '') {
+            $scope.crearModalEnRunTime();
+            $scope.modal.show();
+
+            usuarioService.registrarPublicacion(usuarioFactory.usuario.email, $scope.categoriasSel[0].idCategoria,
+                    $scope.categoriasSel[$scope.categoriasSel.length - 1].idCategoria, otrosFiltroFactory.dispo, $scope.descripcionPublicacion,
+                    localidadFactory.seleccionada.idLocalidad, markerPublicacion.getPosition().lat(), markerPublicacion.getPosition().lng(), $scope.tituloPublicacion, $scope.precioPublicacion,
+                    formaCobroFactory.seleccionada.idFormaCobro, prestacionFactory.seleccionada.idPrestacion,
+                    medioPagoFactory.seleccionado.idMedioPago, $scope.barrioPublicacion, $scope.calleNroPublicacion, otrosFiltroFactory.garantia, $scope.garantiaPublicacion,
+                    $scope.matriculaPublicacion, $scope.telefonoPublicacion)
+                    .then(function(data) {
+                        $scope.modal.hide();
+                        var respuesta = data.respuesta;
+                        if (respuesta === 'OK') {
+                            $scope.ons.notification.alert({
+                                title: 'Info',
+                                messageHTML: '<strong style=\"color: #25a6d9\">Publicación registrada con exito</strong>',
+                                callback: function() {
+                                    $scope.app.slidingMenu.setMainPage('inicio.html');
+                                }
+                            });
+                        } else {
+                            $scope.modal.hide();
+                            $scope.ons.notification.alert({
+                                title: 'Info',
+                                messageHTML: '<strong style=\"color: #ff3333\">' + data.contenido + '</strong>'
+                            });
+                        }
+                    })
+                    .catch(function(data, status) {
+                        $scope.modal.hide();
+                        var mensaje = "No autorizado.";
+                        switch (status) {
+                            case 401:
+                                mensaje = "No autorizado.";
+                                break;
+                        }
+                        $scope.ons.notification.alert({
+                            title: 'Info',
+                            messageHTML: '<strong style=\"color: #ff3333\">Operación denegada: ' + mensaje + '</strong>'
+                        });
+                    });
+        } else {
+            $scope.ons.notification.alert({
+                title: 'Info',
+                messageHTML: '<strong style=\"color: #ff3333\">Debes elegir país, provincia, dpto/partido y localidad</strong>'
+            });
+        }
+    };
+
 
 }
 
 
-Onsen.controller('usuarioCtrl', function($scope, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB) {
-    usuarioCtrl($scope, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, fBFactory, ngFB);
+Onsen.controller('usuarioCtrl', function($scope, $timeout, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, categoriaFactory, formaCobroFactory, prestacionFactory, medioPagoFactory, otrosFiltroFactory, paisFactory, provFactory, dptoFactory, localidadFactory, fBFactory, ngFB) {
+    usuarioCtrl($scope, $timeout, usuarioService, usuarioFactory, publicacionFactory, contratRealiFactory, contratRecibFactory, categoriaFactory, formaCobroFactory, prestacionFactory, medioPagoFactory, otrosFiltroFactory, paisFactory, provFactory, dptoFactory, localidadFactory, fBFactory, ngFB);
 });
 
 

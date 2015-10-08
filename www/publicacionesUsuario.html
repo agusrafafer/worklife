@@ -46,6 +46,10 @@
                                 Finalizada
                             </span>
                         </div>
+                        <div class="desc" style="padding-top: 10px"
+                             ng-show="getComentariosPublicacionSinRespuesta(publicacion.comentarioCollection) !== 0">
+                            <span class="labelito labelito-danger">{{getComentariosPublicacionSinRespuesta(publicacion.comentarioCollection)}} Preguntas</span>
+                        </div>
                     </ons-col>
                 </ons-row>
             </ons-list-item>

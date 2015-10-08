@@ -155,6 +155,7 @@ h6 {
   -moz-transition: all 0.2s linear;
   -o-transition: all 0.2s linear;
   transition: all 0.2s linear;
+  margin-top: 5px;
 }
 .switch__toggle {
   background-color: #ddd;
@@ -1859,7 +1860,7 @@ h6 {
   background-color: #dc5236;
   color: #fff;
   text-align: center;
-  font-size: 16px;
+  font-size: 12px;
   min-width: 19px;
   line-height: 19px;
   font-weight: 400;
@@ -2514,7 +2515,7 @@ h6 {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
-  font-size: 17px;
+  /* font-size: 22px; */
   padding: 0;
   margin: 0;
   list-style-type: none;

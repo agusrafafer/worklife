@@ -29,8 +29,8 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
             return;
         }
 
-       $scope.crearModalEnRunTime();       
-       $scope.modal.show();
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
 
         publicacionFactory.textoBuscado = $scope.textoBuscado;
 
@@ -130,7 +130,12 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
     $scope.getDescripcion = function() {
         //De esta forma elimino todo el codigo html de la descripcion de la publicacion
         //$(publicacionFactory.seleccionada.publicacion).text(); --> el trabajo lo hace el metodo text() de jquery
-        $scope.descripcion = $(publicacionFactory.seleccionada.publicacion).text();
+
+        if (publicacionFactory.seleccionada.publicacion.indexOf("<") === 0) {
+            $scope.descripcion = $(publicacionFactory.seleccionada.publicacion).text();
+        } else {
+            $scope.descripcion = publicacionFactory.seleccionada.publicacion;
+        }
         return $scope.descripcion;
     };
 
@@ -374,9 +379,9 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
     };
 
     $scope.registrarContratacion = function() {
-       $scope.crearModalEnRunTime();        
-       $scope.modal.show();
-       
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
+
         $scope.ons.notification.confirm({
             message: '¿Seguro deseas contactar?',
             buttonLabels: ['No', 'Si'],
@@ -432,8 +437,8 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
     };
 
     $scope.comentarios = function() {
-       $scope.crearModalEnRunTime();        
-       $scope.modal.show();
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
 
         publicacionService.comentarios(publicacionFactory.seleccionada.idPublicacion)
                 .then(function(data) {
@@ -487,8 +492,8 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
     };
 
     $scope.registrarComentario = function(contestado, idComentario) {
-       $scope.crearModalEnRunTime();        
-       $scope.modal.show();
+        $scope.crearModalEnRunTime();
+        $scope.modal.show();
 
         // Presiono Si
         var idPublicacion = publicacionFactory.seleccionada.idPublicacion;

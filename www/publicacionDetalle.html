@@ -45,7 +45,12 @@
                 </ons-col>
 
                 <ons-col class="action-col" ng-click="comentarios()">
-                    <div class="action-icon" style="color: blue"><ons-icon icon="ion-chatboxes"></ons-icon></div>
+                    <div class="action-icon" style="color: blue">
+                        <ons-icon icon="ion-chatboxes"></ons-icon>
+                            <span ng-show="getComentariosPublicacionSinRespuesta(getPublicacionSeleccionada().comentarioCollection) !== 0">
+                                <span class="notification" style="font-size: 12px">{{getComentariosPublicacionSinRespuesta(getPublicacionSeleccionada().comentarioCollection)}}</span>
+                            </span>
+                    </div>
                     <div class="action-label" style="color: blue">Preguntas</div>
                 </ons-col>
 
@@ -97,7 +102,7 @@
             </div>
         </ons-list-item>
 
-        <ons-list-item>
+        <ons-list-item ng-show="(getPublicacionSeleccionada().DisponibilidadHoraria)">
             <div class="prop-desc">
                 <i class="fa fa-history"></i>
                 SOS 24hs

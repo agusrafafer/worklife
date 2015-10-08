@@ -1,0 +1,143 @@
+<ons-page on-device-backbutton="app.navigator.popPage()" sliding-menu-ignore="true" ng-controller="usuarioCtrl">
+    <form name="frmUbicar" novalidate>
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="atrasUbicarPublicar()">
+                    <ons-icon icon="ion-arrow-left-c" style="font-size: 28px;" fixed-width="false"></ons-icon>
+                </ons-toolbar-button>
+                <!--<ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>-->
+            </div>
+            <div class="center">
+                Ubicar publicaci&oacute;n
+            </div>
+            <div class="right">
+                <ons-toolbar-button ng-show="frmUbicar.$valid"
+                                    ng-click="registrarPublicacion()">
+                    <ons-icon icon="ion-checkmark-round" 
+                              fixed-width="false" 
+                              style="vertical-align: -4px;">
+
+                    </ons-icon>
+                </ons-toolbar-button>
+                <ons-toolbar-button ng-show="!frmUbicar.$valid"
+                                    ng-disabled="!frmUbicar.$valid">
+                    <ons-icon icon="ion-checkmark-round" 
+                              fixed-width="false" 
+                              style="vertical-align: -4px;">
+
+                    </ons-icon>
+                </ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+
+        {{getParametroParaPublicar('ubicar')}}
+        <ons-list modifier="inset" style="margin-top: 10px; margin-bottom: 10px">
+            <ons-list-item modifier="chevron" ng-click="promptUbicacion('pais', null)">
+                <ons-icon icon="fa fa-map-marker fa-lg" style="font-size: 14px;">&nbsp;Pa&iacute;s</ons-icon>
+                <span class="list-item-note lucent">{{getPaisSeleccionado() === '' ? 'Todos' : getPaisSeleccionado().pais}}</span>
+            </ons-list-item>
+            <ons-list-item modifier="chevron" ng-click="promptUbicacion('provincia', getPaisSeleccionado().idPais)">
+                <ons-icon icon="fa fa-map-marker fa-lg" style="font-size: 14px;">&nbsp;Provincia</ons-icon>
+                <span class="list-item-note lucent">{{getProvSeleccionada() === '' ? 'Todas' : getProvSeleccionada().provincia}}</span>
+            </ons-list-item>
+            <ons-list-item modifier="chevron" ng-click="promptUbicacion('dpto', getProvSeleccionada().idProvincia)">
+                <ons-icon icon="fa fa-map-marker fa-lg" style="font-size: 14px;">&nbsp;Depto/Partido</ons-icon>
+                <span class="list-item-note lucent">{{getDptoSeleccionado() === '' ? 'Todos' : getDptoSeleccionado().departamento}}</span>
+            </ons-list-item>
+            <ons-list-item modifier="chevron" ng-click="promptUbicacion('localidad', getDptoSeleccionado().idDepartamento)">
+                <ons-icon icon="fa fa-map-marker fa-lg" style="font-size: 14px;">&nbsp;Localidad</ons-icon>
+                <span class="list-item-note lucent">{{getLocalidadSeleccionada() === '' ? 'Todos' : getLocalidadSeleccionada().localidad}}</span>
+            </ons-list-item>
+            <ons-list-item>
+                <ons-row>
+                    <ons-col>
+                        <input type="text"
+                               ng-maxlength="45"
+                               maxlength="45"
+                               class="text-input text-input--transparent" 
+                               placeholder="Calle y nro" 
+                               style="width: 100%"
+                               ng-model="calleNroPublicacion"
+                               ng-blur="onBlurCalleNroPublicacion()"
+                               required>
+                    </ons-col>
+                    <ons-col>
+                        <input type="text"
+                               ng-maxlength="45"
+                               maxlength="45"
+                               class="text-input text-input--transparent" 
+                               placeholder="Barrio" 
+                               style="width: 100%"
+                               ng-model="barrioPublicacion"
+                               required>
+                    </ons-col>
+                    <ons-col></ons-col>
+                </ons-row>
+            </ons-list-item>
+
+        </ons-list>
+        <div style="width:100%; text-align: center">
+            <div id="map_canvas" style="position: absolute; 
+                 width:98%; 
+                 height: 50%; 
+                 padding: 0;   
+                 z-index: -1;
+                 margin-left: 5px;">
+
+            </div>
+        </div>
+
+
+        <ons-dialog cancelable="true" var="dialogFiltroPais">
+            <ons-list ng-show="(getListarUbicacion('pais').length !== 0)">
+                <ons-list-item modifier="tappable" ng-repeat="p in getListarUbicacion('pais')" ng-click="setPaisSeleccionado($index)">
+                    {{p.pais}}
+                </ons-list-item>
+            </ons-list>
+            <ons-list ng-show="(getListarUbicacion('pais').length === 0)">
+                <ons-list-item modifier="tappable" ng-click="dialogFiltroPais.hide()">
+                    No se encontraron resultados!
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+
+        <ons-dialog cancelable="true" var="dialogFiltroProv">
+            <ons-list ng-show="(getListarUbicacion('provincia').length !== 0)">
+                <ons-list-item modifier="tappable" ng-repeat="p in getListarUbicacion('provincia')" ng-click="setProvSeleccionada($index)">
+                    {{p.provincia}}
+                </ons-list-item>
+            </ons-list>
+            <ons-list ng-show="(getListarUbicacion('provincia').length === 0)">
+                <ons-list-item modifier="tappable" ng-click="dialogFiltroProv.hide()">
+                    No se encontraron resultados!
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+
+        <ons-dialog cancelable="true" var="dialogFiltroDpto">
+            <ons-list ng-show="(getListarUbicacion('dpto').length !== 0)">
+                <ons-list-item modifier="tappable" ng-repeat="d in getListarUbicacion('dpto')" ng-click="setDptoSeleccionado($index)">
+                    {{d.departamento}}
+                </ons-list-item>
+            </ons-list>
+            <ons-list ng-show="(getListarUbicacion('dpto').length === 0)">
+                <ons-list-item modifier="tappable" ng-click="dialogFiltroDpto.hide()">
+                    No se encontraron resultados!
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+
+        <ons-dialog cancelable="true" var="dialogFiltroLoc">
+            <ons-list ng-show="(getListarUbicacion('localidad').length !== 0)">
+                <ons-list-item modifier="tappable" ng-repeat="l in getListarUbicacion('localidad')" ng-click="setLocalidadSeleccionada($index)">
+                    {{l.localidad}}
+                </ons-list-item>
+            </ons-list>
+            <ons-list ng-show="(getListarUbicacion('localidad').length === 0)">
+                <ons-list-item modifier="tappable" ng-click="dialogFiltroLoc.hide()">
+                    No se encontraron resultados!
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+    </form>
+</ons-page>
