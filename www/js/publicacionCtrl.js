@@ -380,8 +380,7 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
 
     $scope.registrarContratacion = function() {
         $scope.crearModalEnRunTime();
-        $scope.modal.show();
-
+        
         $scope.ons.notification.confirm({
             message: '¿Seguro deseas contactar?',
             buttonLabels: ['No', 'Si'],
@@ -390,10 +389,12 @@ function publicacionCtrl($scope, publicacionService, publicacionFactory, usuario
                 switch (idx) {
                     case 0:
                         // Presiono No
-                        $scope.modal.hide();
+//                        $scope.modal.hide();
                         break;
                     case 1:
                         // Presiono Si
+                        
+                        $scope.modal.show();
                         var idPublicacion = publicacionFactory.seleccionada.idPublicacion;
                         var mailUsuarioQueContrata = usuarioFactory.usuario.email;
 

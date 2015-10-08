@@ -337,7 +337,7 @@ function usuarioCtrl($scope, $timeout, usuarioService, usuarioFactory, publicaci
 
     $scope.cancelarContratacion = function() {
         $scope.crearModalEnRunTime();
-        $scope.modal.show();
+        
         $scope.ons.notification.confirm({
             message: '¿Seguro desea cancelar el contacto?',
             buttonLabels: ['No', 'Si'],
@@ -346,10 +346,11 @@ function usuarioCtrl($scope, $timeout, usuarioService, usuarioFactory, publicaci
                 switch (idx) {
                     case 0:
                         // Presiono No
-                        $scope.modal.hide();
+//                        $scope.modal.hide();
                         break;
                     case 1:
                         // Presiono Si
+                        $scope.modal.show();
                         var idContratacion = usuarioService.getTipoContratacion() === 'recibida' ? contratRecibFactory.seleccionada.idContratacion : contratRealiFactory.seleccionada.idContratacion;
 
                         usuarioService.cancelarContratacion(idContratacion, usuarioService.getTipoContratacion())
@@ -389,7 +390,7 @@ function usuarioCtrl($scope, $timeout, usuarioService, usuarioFactory, publicaci
 
     $scope.confirmarContratacion = function() {
         $scope.crearModalEnRunTime();
-        $scope.modal.show();
+        
         $scope.ons.notification.confirm({
             message: '¿Seguro desea confirmar el contacto?',
             buttonLabels: ['No', 'Si'],
@@ -398,10 +399,11 @@ function usuarioCtrl($scope, $timeout, usuarioService, usuarioFactory, publicaci
                 switch (idx) {
                     case 0:
                         // Presiono No
-                        $scope.modal.hide();
+//                        $scope.modal.hide();
                         break;
                     case 1:
                         // Presiono Si
+                        $scope.modal.show();
                         var idContratacion = contratRecibFactory.seleccionada.idContratacion;
 
                         usuarioService.confirmarContratacion(idContratacion)
