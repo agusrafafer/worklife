@@ -123,7 +123,7 @@ Onsen.factory('categoriaFactory', function() {
 
 Onsen.factory('wsFactory', function() {
     return {
-        url: "http://localhost:8080/wl/webresources/ws"
+        url: "http://www.worklife.com.ar/wl/webresources/ws"
     };
 });
 
